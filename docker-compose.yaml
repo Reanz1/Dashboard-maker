@@ -1,0 +1,11 @@
+services:
+  dashboard:
+    image: randomsi/dashboard-maker:latest
+    container_name: homelab-dashboard
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./data:/data
+      - ./images:/images
+      - ./templates:/templates
