@@ -1,0 +1,100 @@
+:root {
+    /* ── Surface ── */
+    --color-bg:               #0a0a0a;
+    --color-text:             #e5e5e5;
+
+    /* ── Cards ── */
+    --card-bg:                #171717;
+    --card-bg-hover:          #1f1f1f;
+    --card-border:            #262626;
+    --card-border-hover:      #404040;
+    --card-radius:            0.5rem;
+    --card-hover-transform:   translateY(-2px);
+
+    /* ── Card Content ── */
+    --card-title-color:       white;
+    --card-title-weight:      500;
+    --card-desc-color:        #737373;
+    --card-delete-color:      #525252;
+
+    /* ── Section ── */
+    --color-section-title:    #737373;
+    --section-title-spacing:  0.05em;
+    --cat-delete-color:       #404040;
+
+    /* ── Header ── */
+    --color-icon:             white;
+    --color-title:            white;
+    --title-size:             1.5rem;
+    --title-weight:           300;
+    --title-bold-weight:      700;
+    --color-underline:        white;
+    --underline-height:       0.25rem;
+    --underline-width:        3rem;
+
+    /* ── Buttons ── */
+    --btn-edit-bg:            #1a1a1a;
+    --btn-edit-text:          #a3a3a3;
+    --btn-edit-border:        #333;
+    --btn-edit-hover-bg:      #262626;
+    --btn-edit-hover-text:    white;
+    --btn-edit-active-bg:     white;
+    --btn-edit-active-text:   black;
+    --btn-edit-active-border: white;
+    --btn-radius:             0.25rem;
+    --btn-font-size:          0.75rem;
+    --btn-tracking:           0.05em;
+
+    --btn-primary-bg:         white;
+    --btn-primary-text:       black;
+    --btn-primary-weight:     600;
+
+    /* ── Toolbar ── */
+    --toolbar-mb:             4rem;
+    --toolbar-link-color:     #737373;
+    --toolbar-editor-color:   #818cf8;
+    --toolbar-editor-hover-color: #a5b4fc;
+
+    /* ── Edit mode ── */
+    --color-edit-border:      #333;
+
+    /* ── Panel ── */
+    --panel-bg:               #111;
+    --panel-border:           #262626;
+    --panel-padding:          1.5rem;
+    --panel-radius:           0.5rem;
+
+    /* ── Inputs ── */
+    --input-bg:               #1a1a1a;
+    --input-border:           #333;
+    --input-text:             white;
+    --input-focus-border:     white;
+    --input-radius:           0.25rem;
+
+    /* ── Dropdowns ── */
+    --dropdown-bg:            #1a1a1a;
+    --dropdown-border:        #333;
+    --dropdown-item-color:    #d4d4d4;
+    --dropdown-item-hover-bg: #262626;
+    --category-item-color:    white;
+    --category-item-hover-bg: #262626;
+
+    /* ── Editor ── */
+    --editor-bg:              #0a0a0a;
+    --editor-text:            #4ade80;
+    --editor-border:          #333;
+    --editor-focus-border:    #6366f1;
+    --color-warning:          #eab308;
+
+    /* ── Footer ── */
+    --footer-border:          #171717;
+    --footer-color:           #525252;
+    --footer-spacing:         0.05em;
+
+    /* ── Scrollbar ── */
+    --color-scrollbar-thumb:       #262626;
+    --color-scrollbar-thumb-hover: #404040;
+
+    /* ── Misc ── */
+    --color-danger:           #ef4444;
+}

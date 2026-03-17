@@ -1,0 +1,231 @@
+:root {
+    /* ── Surface ── */
+    --color-bg:               #00080f;
+    --color-text:             #b3d9ff;
+    --body-bg-image:          radial-gradient(circle at 15% 50%, rgba(0, 43, 77, 0.4) 0%, transparent 50%),
+                              radial-gradient(circle at 85% 30%, rgba(0, 34, 61, 0.4) 0%, transparent 50%);
+    --body-bg-size:           200% 200%;
+
+    /* ── Animation ── */
+    --ease:                   cubic-bezier(0.2, 0.8, 0.2, 1);
+    --blur-amount:            4px;
+
+    /* ── Cards ── */
+    --card-bg:                linear-gradient(145deg, rgba(10, 31, 46, 0.6) 0%, rgba(5, 15, 23, 0.4) 100%);
+    --card-bg-hover:          linear-gradient(145deg, rgba(14, 46, 70, 0.8) 0%, rgba(10, 31, 46, 0.6) 100%);
+    --card-border:            rgba(56, 189, 248, 0.1);
+    --card-border-hover:      rgba(56, 189, 248, 0.4);
+    --card-radius:            1rem;
+    --card-transition-duration: 0.4s;
+    --card-transition-ease:   cubic-bezier(0.2, 0.8, 0.2, 1);
+    --card-hover-transform:   translateY(-6px) scale(1.02);
+    --card-hover-shadow:      0 12px 40px rgba(56, 189, 248, 0.15);
+
+    /* ── Card Content ── */
+    --card-title-color:       #f0f9ff;
+    --card-title-weight:      600;
+    --card-title-tracking:    0.025em;
+    --card-title-size:        1.125rem;
+    --card-desc-color:        rgba(125, 211, 252, 0.6);
+    --card-desc-size:         0.75rem;
+    --card-desc-weight:       300;
+    --card-desc-line-height:  1.6;
+    --card-delete-color:      #0c4a6e;
+    --card-delete-hover-color: #fda4af;
+    --card-delete-bg:         rgba(76, 5, 25, 0.5);
+    --card-delete-border:     1px solid rgba(136, 19, 55, 0.5);
+    --card-delete-padding:    0.5rem;
+    --card-delete-radius:     0.5rem;
+    --card-delete-hover-bg:   #881337;
+
+    /* ── Section ── */
+    --color-section-title:    #7dd3fc;
+    --section-title-spacing:  0.2em;
+    --section-title-size:     0.7rem;
+    --section-title-weight:   800;
+    --cat-delete-color:       #0c4a6e;
+    --cat-delete-hover-color: #fda4af;
+    --cat-delete-size:        0.625rem;
+    --cat-delete-transform:   uppercase;
+    --cat-delete-tracking:    0.05em;
+    --cat-delete-bg:          rgba(76, 5, 25, 0.3);
+    --cat-delete-border:      1px solid rgba(136, 19, 55, 0.5);
+    --cat-delete-padding:     0.375rem 0.75rem;
+    --cat-delete-radius:      0.375rem;
+
+    /* ── Header ── */
+    --color-icon:             #38bdf8;
+    --icon-filter:            drop-shadow(0 0 8px rgba(56, 189, 248, 0.5));
+    --color-title:            #f0f9ff;
+    --color-title-bold:       #38bdf8;
+    --title-size:             1.875rem;
+    --title-weight:           300;
+    --title-bold-weight:      700;
+    --color-underline:        #38bdf8;
+    --underline-height:       0.25rem;
+    --underline-width:        4rem;
+    --underline-radius:       9999px;
+
+    /* ── Buttons ── */
+    --btn-edit-bg:            rgba(0, 21, 36, 0.8);
+    --btn-edit-text:          #38bdf8;
+    --btn-edit-border:        rgba(12, 74, 110, 0.5);
+    --btn-edit-hover-bg:      rgba(12, 74, 110, 0.4);
+    --btn-edit-hover-text:    white;
+    --btn-edit-hover-border:  rgba(56, 189, 248, 0.5);
+    --btn-edit-active-bg:     #f43f5e;
+    --btn-edit-active-text:   white;
+    --btn-edit-active-border: #fb7185;
+    --btn-radius:             0.5rem;
+    --btn-font-size:          0.75rem;
+    --btn-font-weight:        700;
+    --btn-tracking:           0.05em;
+    --btn-backdrop:           blur(8px);
+
+    --btn-primary-bg:         #0ea5e9;
+    --btn-primary-text:       white;
+    --btn-primary-weight:     700;
+    --btn-primary-radius:     0.5rem;
+    --btn-primary-shadow:     0 0 20px rgba(14, 165, 233, 0.3);
+    --btn-primary-hover-shadow: 0 0 30px rgba(14, 165, 233, 0.5);
+
+    /* ── Toolbar ── */
+    --toolbar-mb:             3rem;
+    --toolbar-padding:        1rem;
+    --toolbar-bg:             rgba(76, 5, 25, 0.2);
+    --toolbar-radius:         0.75rem;
+    --toolbar-border:         1px solid rgba(136, 19, 55, 0.3);
+    --toolbar-backdrop:       blur(4px);
+    --toolbar-link-color:     #38bdf8;
+    --toolbar-link-spacing:   0.05em;
+    --toolbar-link-padding:   0.5rem 0.75rem;
+    --toolbar-link-radius:    0.5rem;
+    --toolbar-link-hover-bg:  rgba(12, 74, 110, 0.3);
+    --toolbar-editor-color:   #67e8f9;
+    --color-danger:           #f43f5e;
+    --color-danger-hover:     white;
+
+    /* ── Edit mode ── */
+    --color-edit-border:      #f43f5e;
+
+    /* ── Panel ── */
+    --panel-bg:               rgba(0, 21, 36, 0.95);
+    --panel-border:           rgba(12, 74, 110, 0.5);
+    --panel-padding:          2rem;
+    --panel-radius:           1rem;
+    --panel-backdrop:         blur(20px);
+    --panel-heading-color:    #38bdf8;
+    --panel-heading-spacing:  0.05em;
+
+    /* ── Inputs ── */
+    --input-bg:               rgba(0, 11, 20, 0.6);
+    --input-border:           rgba(56, 189, 248, 0.2);
+    --input-text:             #e0f2fe;
+    --input-focus-border:     #38bdf8;
+    --input-focus-shadow:     0 0 10px rgba(56, 189, 248, 0.1);
+    --input-radius:           0.5rem;
+    --input-backdrop:         blur(8px);
+    --label-color:            #38bdf8;
+
+    /* ── Dropdowns ── */
+    --dropdown-bg:            rgba(0, 21, 36, 0.95);
+    --dropdown-border:        rgba(12, 74, 110, 0.5);
+    --dropdown-radius:        0.75rem;
+    --dropdown-shadow:        0 10px 40px rgba(0, 0, 0, 0.5);
+    --dropdown-backdrop:      blur(20px);
+    --dropdown-item-color:    #bae6fd;
+    --dropdown-item-hover-bg: rgba(12, 74, 110, 0.4);
+
+    --category-item-color:    #bae6fd;
+    --category-item-hover-bg: rgba(12, 74, 110, 0.4);
+    --category-btn-hover-bg:  rgba(12, 74, 110, 0.3);
+
+    /* ── Editor ── */
+    --editor-bg:              #00080f;
+    --editor-text:            #67e8f9;
+    --editor-border:          rgba(12, 74, 110, 0.5);
+    --editor-focus-border:    #38bdf8;
+    --editor-font-size:       0.875rem;
+    --editor-radius:          0.75rem;
+    --editor-line-height:     1.6;
+
+    /* ── Footer ── */
+    --footer-border:          rgba(12, 74, 110, 0.3);
+    --footer-color:           #0c4a6e;
+    --footer-size:            0.625rem;
+    --footer-spacing:         0.2em;
+    --footer-weight:          700;
+
+    /* ── Scrollbar ── */
+    --scrollbar-width:        6px;
+    --scrollbar-radius:       10px;
+    --color-scrollbar-thumb:       rgba(56, 189, 248, 0.3);
+    --color-scrollbar-thumb-hover: rgba(56, 189, 248, 0.6);
+}
+
+/* ── Ocean background animation ── */
+body {
+    animation: oceanCurrents 15s ease infinite alternate;
+    overflow-x: hidden;
+}
+@keyframes oceanCurrents {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 100% 50%; }
+}
+
+/* ── Ambient glow ── */
+.ambient-glow {
+    position: absolute;
+    top: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80vw;
+    height: 300px;
+    pointer-events: none;
+    z-index: -1;
+    background: radial-gradient(ellipse at center, rgba(56, 189, 248, 0.08) 0%, transparent 60%);
+}
+
+/* ── Status line breathing ── */
+@keyframes breathe {
+    0%, 100% { opacity: 0.6; box-shadow: 0 0 8px #38bdf8; }
+    50% { opacity: 1; box-shadow: 0 0 16px #38bdf8, 0 0 2px #fff; }
+}
+.title-underline {
+    animation: breathe 3s ease-in-out infinite;
+}
+
+/* ── Ocean card glass effect ── */
+.service-card {
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+    position: relative;
+    overflow: hidden;
+}
+.service-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(to bottom right, rgba(255,255,255,0.1), transparent 50%);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+}
+
+/* ── Section title border ── */
+.section-title {
+    border-bottom: 1px solid rgba(56, 189, 248, 0.15);
+    padding-bottom: 0.75rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* ── Ocean input global overrides ── */
+input, select, textarea {
+    backdrop-filter: blur(8px);
+}

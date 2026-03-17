@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/base.css">
+    <link rel="stylesheet" href="/theme-css/{{ active_theme }}.css">
+</head>
+<body class="p-6 md:p-16{% if active_theme == 'ocean' %} relative{% endif %}" data-theme="{{ active_theme }}">
+
+    {% if active_theme == 'ocean' %}
+    <div class="ambient-glow"></div>
+    {% endif %}
+
+    <div class="max-w-5xl mx-auto relative" style="z-index: var(--z-content)">
+
+        <!-- ── Header ── -->
+        <header class="mb-12 flex items-center justify-between">
+            <div class="flex items-center gap-6 group">
+                <div class="relative">
+                    <svg class="header-icon h-12 w-12 transition-transform duration-500 group-hover:scale-110" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        {{ icon_svg | safe }}
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="dashboard-title">{{ title_html | safe }}</h1>
+                    <div class="title-underline"></div>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <button id="edit-mode-btn" type="button" class="edit-btn"
+                        data-idle-text="{{ edit_label }}"
+                        data-active-text="{{ edit_active_label }}">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                    </svg>
+                    <span id="edit-btn-text">{{ edit_label }}</span>
+                </button>
+
+                <div class="relative inline-block text-left">
+                    <button type="button" id="theme-dropdown-btn" class="theme-selector-btn">
+                        <span id="theme-selected-text">LOADING...</span>
+                        <svg class="w-4 h-4 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div id="theme-dropdown" class="dropdown-panel hidden animate-drop-fade origin-top-right">
+                        <div class="py-1" id="theme-options"></div>
+                    </div>
+                    <input type="hidden" id="theme-selector" value="{{ active_theme }}">
+                </div>
+            </div>
+        </header>
+
+        <!-- ── Edit Toolbar ── -->
+        <div class="edit-toolbar edit-mode-only">
+
+            <!-- Add Service -->
+            <details class="group" id="details-service">
+                <summary class="toolbar-link">{{ add_service_label }}</summary>
+                <div class="editor-panel editor-panel--wide animate-drop-fade">
+                    {% if panel_heading_service %}
+                    <h3 class="panel-heading">{{ panel_heading_service }}</h3>
+                    {% endif %}
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        {% if show_labels %}
+                        <div class="space-y-1">
+                            <label class="panel-input-label">NAME</label>
+                            <input type="text" id="svc-name" placeholder="{{ name_placeholder }}" class="panel-input">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="panel-input-label">{{ desc_label }}</label>
+                            <input type="text" id="svc-desc" placeholder="{{ desc_placeholder }}" class="panel-input">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="panel-input-label">{{ url_label }}</label>
+                            <input type="text" id="svc-url" placeholder="{{ url_placeholder }}" class="panel-input">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="panel-input-label">{{ category_label }}</label>
+                            <div class="relative w-full">
+                                <button type="button" id="category-dropdown-btn" class="category-btn">
+                                    <span id="category-selected-text" class="truncate">{{ select_category_text }}</span>
+                                    <svg class="w-4 h-4 ml-2 flex-shrink-0 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                    </svg>
+                                </button>
+                                <div id="category-dropdown" class="category-dropdown hidden animate-drop-fade">
+                                    <div class="py-1" id="category-options"></div>
+                                </div>
+                                <input type="hidden" id="category" value="">
+                            </div>
+                        </div>
+                        {% else %}
+                        <input type="text" id="svc-name" placeholder="Name" class="panel-input">
+                        <input type="text" id="svc-desc" placeholder="Description" class="panel-input">
+                        <input type="text" id="svc-url" placeholder="URL" class="panel-input">
+                        <div class="relative w-full">
+                            <button type="button" id="category-dropdown-btn" class="category-btn">
+                                <span id="category-selected-text" class="truncate">Select Category...</span>
+                                <svg class="w-4 h-4 ml-2 flex-shrink-0 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+                            <div id="category-dropdown" class="category-dropdown hidden animate-drop-fade">
+                                <div class="py-1" id="category-options"></div>
+                            </div>
+                            <input type="hidden" id="category" value="">
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="mt-6 flex justify-end">
+                        <button type="button" id="btn-add-service" class="btn-primary">{{ save_service_text }}</button>
+                    </div>
+                </div>
+            </details>
+
+            <!-- Add Category -->
+            <details class="group" id="details-category">
+                <summary class="toolbar-link">{{ add_category_label }}</summary>
+                <div class="editor-panel editor-panel--narrow animate-drop-fade">
+                    <div class="flex gap-4">
+                        <input type="text" id="new-category-name" placeholder="Category Name" class="panel-input flex-1">
+                        <button type="button" id="btn-add-category" class="btn-primary">Add</button>
+                    </div>
+                </div>
+            </details>
+
+            <!-- Clone Theme -->
+            <details class="group" id="details-theme-clone">
+                <summary class="toolbar-link">{{ clone_theme_label }}</summary>
+                <div class="editor-panel editor-panel--narrow animate-drop-fade">
+                    <div class="flex gap-4">
+                        <input type="text" id="new-theme-name" placeholder="New Theme Name (e.g. Solar)" class="panel-input flex-1">
+                        <button type="button" id="btn-clone-theme" class="btn-primary">Clone</button>
+                    </div>
+                </div>
+            </details>
+
+            <!-- Edit Theme Code -->
+            <details class="group" id="details-theme-edit">
+                <summary class="toolbar-link toolbar-link--editor">{{ edit_code_label }}</summary>
+                <div class="editor-panel editor-panel--full animate-drop-fade">
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="panel-heading mb-0">{{ editor_heading }}</span>
+                        <span class="editor-warning">{{ editor_warning }}</span>
+                    </div>
+                    <textarea id="theme-code-editor" class="code-editor" spellcheck="false"></textarea>
+                    <div class="mt-4 flex gap-4 justify-end">
+                        <button type="button" id="btn-discard-theme-code" class="btn-secondary">{{ discard_text }}</button>
+                        <button type="button" id="btn-save-theme-code" class="btn-primary">{{ save_compile_text }}</button>
+                    </div>
+                </div>
+            </details>
+
+            <!-- Delete Theme -->
+            <button type="button" id="btn-delete-theme" class="toolbar-link toolbar-link--danger">{{ delete_theme_label }}</button>
+        </div>
+
+        <!-- ── Dynamic Content ── -->
+        <div id="dynamic-content"></div>
+
+        <!-- ── Footer ── -->
+        <footer class="dashboard-footer">
+            <span class="flex items-center gap-2">
+                {% if footer_dot %}
+                <div class="w-1.5 h-1.5 rounded-full animate-pulse" style="background: var(--color-icon)"></div>
+                {% endif %}
+                {{ footer_left }}
+            </span>
+            <span class="flex items-center gap-2">
+                {% if footer_status_dot %}
+                <span class="w-2 h-2 rounded-full animate-pulse" style="background: var(--color-icon); box-shadow: 0 0 8px var(--color-icon)"></span>
+                {% endif %}
+                {{ footer_right }}
+            </span>
+        </footer>
+    </div>
+
+    <script src="/static/js/dashboard.js"></script>
+</body>
+</html>

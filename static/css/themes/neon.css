@@ -1,0 +1,173 @@
+:root {
+    /* ── Surface ── */
+    --color-bg:               #06040d;
+    --color-text:             #e5e5e5;
+    --body-bg-image:          radial-gradient(circle at 50% 0%, #1c0936 0%, transparent 50%),
+                              linear-gradient(rgba(18, 16, 33, 0.3) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(18, 16, 33, 0.3) 1px, transparent 1px);
+    --body-bg-size:           100% 100%, 30px 30px, 30px 30px;
+
+    /* ── Animation ── */
+    --ease:                   cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    --blur-amount:            4px;
+
+    /* ── Cards ── */
+    --card-bg:                rgba(20, 10, 40, 0.5);
+    --card-bg-hover:          rgba(30, 15, 60, 0.7);
+    --card-border:            #3b1b63;
+    --card-border-hover:      #00f3ff;
+    --card-radius:            0.5rem;
+    --card-transition-duration: 0.3s;
+    --card-transition-ease:   cubic-bezier(0.4, 0, 0.2, 1);
+    --card-hover-transform:   translateY(-4px);
+    --card-hover-shadow:      0 0 20px rgba(0, 243, 255, 0.2), inset 0 0 10px rgba(0, 243, 255, 0.1);
+
+    /* ── Card Content ── */
+    --card-title-color:       #00f3ff;
+    --card-title-weight:      900;
+    --card-title-tracking:    0.05em;
+    --card-title-size:        0.875rem;
+    --card-title-transform:   uppercase;
+    --card-desc-color:        #a5b4fc;
+    --card-desc-size:         0.625rem;
+    --card-desc-weight:       500;
+    --card-desc-tracking:     0.05em;
+    --card-desc-opacity:      0.7;
+    --card-delete-color:      #6366f1;
+    --card-delete-hover-color: #ff00a0;
+
+    /* ── Section ── */
+    --color-section-title:    #ff00a0;
+    --section-title-spacing:  0.15em;
+    --section-title-weight:   800;
+    --section-title-shadow:   0 0 8px rgba(255, 0, 160, 0.4);
+    --cat-delete-color:       #4338ca;
+    --cat-delete-size:        0.5625rem;
+    --cat-delete-weight:      900;
+    --cat-delete-transform:   uppercase;
+    --cat-delete-tracking:    0.05em;
+
+    /* ── Header ── */
+    --color-icon:             #ff00a0;
+    --icon-filter:            drop-shadow(0 0 8px rgba(255, 0, 160, 0.6));
+    --color-title:            white;
+    --color-title-bold:       #00f3ff;
+    --title-size:             1.5rem;
+    --title-weight:           300;
+    --title-bold-weight:      900;
+    --title-tracking:         -0.05em;
+    --color-underline:        #ff00a0;
+    --underline-height:       2px;
+    --underline-width:        3rem;
+    --underline-shadow:       0 0 10px #ff00a0;
+
+    /* ── Buttons ── */
+    --btn-edit-bg:            rgba(26, 26, 26, 0.5);
+    --btn-edit-text:          #818cf8;
+    --btn-edit-border:        #3b1b63;
+    --btn-edit-hover-bg:      #262626;
+    --btn-edit-hover-text:    #00f3ff;
+    --btn-edit-active-bg:     rgba(0, 243, 255, 0.1);
+    --btn-edit-active-text:   #00f3ff;
+    --btn-edit-active-border: #00f3ff;
+    --btn-radius:             0.25rem;
+    --btn-font-size:          0.625rem;
+    --btn-font-weight:        900;
+    --btn-tracking:           0.2em;
+
+    --btn-primary-bg:         #00f3ff;
+    --btn-primary-text:       black;
+    --btn-primary-weight:     800;
+    --btn-primary-size:       0.75rem;
+    --btn-primary-transform:  uppercase;
+    --btn-primary-tracking:   0.05em;
+    --btn-primary-shadow:     0 0 15px rgba(0, 243, 255, 0.4);
+    --btn-primary-hover-bg:   white;
+    --btn-primary-hover-shadow: 0 0 25px #00f3ff;
+
+    /* ── Toolbar ── */
+    --toolbar-mb:             5rem;
+    --toolbar-link-color:     #818cf8;
+    --toolbar-link-spacing:   0.2em;
+    --toolbar-font-size:      0.625rem;
+    --toolbar-font-weight:    900;
+    --toolbar-editor-color:   #00f3ff;
+    --color-danger-hover:     #ff00a0;
+
+    /* ── Edit mode ── */
+    --color-edit-border:      #ff00a0;
+
+    /* ── Panel ── */
+    --panel-bg:               rgba(15, 5, 30, 0.95);
+    --panel-border:           #ff00a0;
+    --panel-padding:          2rem;
+    --panel-radius:           0.5rem;
+    --panel-backdrop:         blur(20px);
+
+    /* ── Inputs ── */
+    --input-bg:               rgba(10, 5, 20, 0.8);
+    --input-border:           #3b1b63;
+    --input-text:             #00f3ff;
+    --input-focus-border:     #00f3ff;
+    --input-focus-shadow:     0 0 15px rgba(0, 243, 255, 0.2);
+    --input-radius:           0.25rem;
+    --label-color:            #818cf8;
+    --label-size:             0.5625rem;
+
+    /* ── Dropdowns ── */
+    --dropdown-bg:            rgba(15, 5, 30, 0.85);
+    --dropdown-border:        #00f3ff;
+    --dropdown-shadow:        0 10px 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 243, 255, 0.1);
+    --dropdown-backdrop:      blur(12px);
+    --dropdown-item-color:    #a5b4fc;
+    --dropdown-item-size:     0.625rem;
+    --dropdown-item-weight:   900;
+    --dropdown-item-spacing:  0.05em;
+    --dropdown-item-hover-bg: rgba(255, 0, 160, 0.2);
+    --dropdown-item-border:   1px solid rgba(255, 255, 255, 0.05);
+    --category-item-color:    white;
+    --category-item-hover-bg: rgba(0, 243, 255, 0.1);
+
+    /* ── Editor ── */
+    --editor-bg:              rgba(10, 5, 20, 0.8);
+    --editor-text:            #00f3ff;
+    --editor-border:          #3b1b63;
+    --editor-focus-border:    #00f3ff;
+    --color-warning:          #ff00a0;
+
+    /* ── Footer ── */
+    --footer-border:          #1c0936;
+    --footer-color:           #6366f1;
+    --footer-size:            0.625rem;
+    --footer-spacing:         0.3em;
+    --footer-weight:          700;
+
+    /* ── Scrollbar ── */
+    --scrollbar-width:        6px;
+    --scrollbar-radius:       10px;
+    --color-scrollbar-thumb:       #3b1b63;
+    --color-scrollbar-thumb-hover: #ff00a0;
+
+    /* ── Misc ── */
+    --color-danger:           #ef4444;
+}
+
+/* ── Neon-specific: card bottom glow line ── */
+.service-card {
+    backdrop-filter: blur(8px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+}
+.service-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    width: 0;
+    background: #00f3ff;
+    transition: width 0.5s ease;
+    box-shadow: 0 0 10px #00f3ff;
+}
+.service-card:hover::after {
+    width: 100%;
+}
