@@ -4,11 +4,9 @@ let globalCategories = [];
 
 const detailsService   = document.getElementById('details-service');
 const detailsCategory  = document.getElementById('details-category');
-const detailsThemeClone = document.getElementById('details-theme-clone');
 const detailsHtmlEdit  = document.getElementById('details-html-edit');
-const detailsThemeEdit = document.getElementById('details-theme-edit');
 
-const allDetails = [detailsService, detailsCategory, detailsThemeClone, detailsHtmlEdit, detailsThemeEdit];
+const allDetails = [detailsService, detailsCategory, detailsHtmlEdit];
 
 // Close other panels when one opens + replay animation
 allDetails.forEach(detail => {
@@ -24,7 +22,6 @@ allDetails.forEach(detail => {
                 animatedChild.classList.add('animate-drop-fade');
             }
             if (detail === detailsHtmlEdit) loadHtmlCode();
-            if (detail === detailsThemeEdit) loadThemeCode();
         }
     });
 });
@@ -68,97 +65,94 @@ document.addEventListener('click', () => {
 
 // ── Init ──
 async function init() {
-    await fetchThemes();
     await fetchCategories();
     await fetchServices();
 }
 
-// ── Themes ──
-async function fetchThemes() {
-    try {
-        const [themesRes, configRes] = await Promise.all([fetch('/api/themes'), fetch('/api/config')]);
-        const themes = await themesRes.json();
-        const config = await configRes.json();
+// ── Custom Confirmation Dialog ──
+function showConfirm(title, message, onConfirm) {
+    const overlay = document.createElement('div');
+    overlay.className = 'confirm-overlay';
+    overlay.innerHTML = `
+        <div class="confirm-box">
+            <h3>${title}</h3>
+            <p>${message}</p>
+            <div class="confirm-actions">
+                <button type="button" class="btn-secondary confirm-cancel">Cancel</button>
+                <button type="button" class="btn-primary confirm-ok">Confirm</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(overlay);
 
-        document.getElementById('theme-selected-text').textContent = config.theme.toUpperCase() + ' THEME';
-        document.getElementById('theme-selector').value = config.theme;
-
-        const container = document.getElementById('theme-options');
-        container.innerHTML = '';
-        themes.forEach(t => {
-            const a = document.createElement('a');
-            a.href = '#';
-            a.className = 'dropdown-item';
-            a.textContent = t + ' Theme';
-            a.addEventListener('click', (e) => { e.preventDefault(); changeTheme(t); });
-            container.appendChild(a);
-        });
-    } catch (e) { console.error('Failed to fetch themes:', e); }
+    overlay.querySelector('.confirm-cancel').addEventListener('click', () => overlay.remove());
+    overlay.querySelector('.confirm-ok').addEventListener('click', () => {
+        overlay.remove();
+        onConfirm();
+    });
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) overlay.remove();
+    });
 }
 
-function changeTheme(newTheme) {
-    fetch('/api/config', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ theme: newTheme })
-    }).then(() => location.reload());
+// ── HTML Editor ──
+let originalHtml = '';
+
+async function loadHtmlCode() {
+    const res = await fetch('/api/html');
+    const data = await res.json();
+    document.getElementById('html-code-editor').value = data.content;
+    originalHtml = data.content;
 }
 
-// ── Clone Theme ──
-document.getElementById('btn-clone-theme').addEventListener('click', () => {
-    const val = document.getElementById('new-theme-name').value.trim();
-    if (!val) return;
-    fetch('/api/themes', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: val })
-    }).then(() => location.reload());
-});
-
-// ── Delete Theme ──
-document.getElementById('btn-delete-theme').addEventListener('click', () => {
-    const currentTheme = document.getElementById('theme-selector').value;
-    if (['default', 'neon', 'ocean'].includes(currentTheme)) {
-        alert('Built-in themes cannot be deleted.');
+document.getElementById('btn-save-html').addEventListener('click', (e) => {
+    const content = document.getElementById('html-code-editor').value;
+    if (content === originalHtml) {
+        showConfirm('No Changes', 'No changes were detected.', () => {});
         return;
     }
-    if (confirm(`Are you sure you want to delete the '${currentTheme}' theme?`)) {
-        fetch(`/api/themes/${currentTheme}`, { method: 'DELETE' }).then(res => {
-            if (res.ok) location.reload();
-        });
-    }
+
+    showConfirm(
+        'Save Changes?',
+        'This will update the entire page (HTML + CSS). If something breaks, you can use <strong>"Reset to Default"</strong> to restore the original.',
+        async () => {
+            const btn = e.target;
+            const originalText = btn.innerText;
+            btn.innerText = 'Saving...';
+
+            try {
+                const response = await fetch('/api/html', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ content })
+                });
+                if (!response.ok) throw new Error(`Server returned ${response.status}`);
+                location.reload();
+            } catch (error) {
+                showConfirm('Error', 'Failed to save changes.', () => {});
+                btn.innerText = originalText;
+            }
+        }
+    );
 });
 
-// ── Theme Code Editor ──
-async function loadThemeCode() {
-    const currentTheme = document.getElementById('theme-selector').value;
-    const res = await fetch(`/api/themes/${currentTheme}`);
-    const data = await res.json();
-    document.getElementById('theme-code-editor').value = data.content;
-}
+document.getElementById('btn-discard-html').addEventListener('click', loadHtmlCode);
 
-document.getElementById('btn-save-theme-code').addEventListener('click', async (e) => {
-    const currentTheme = document.getElementById('theme-selector').value;
-    const content = document.getElementById('theme-code-editor').value;
-    const btn = e.target;
-    const originalText = btn.innerText;
-    btn.innerText = 'Saving...';
-
-    try {
-        const response = await fetch(`/api/themes/${currentTheme}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ content })
-        });
-        if (!response.ok) throw new Error(`Server returned ${response.status}`);
-        location.reload();
-    } catch (error) {
-        alert('Failed to save theme!');
-        btn.innerText = originalText;
-    }
+document.getElementById('btn-reset-html').addEventListener('click', () => {
+    showConfirm(
+        'Reset to Default?',
+        'This will discard <strong>all your customizations</strong> and restore the original page.',
+        async () => {
+            try {
+                const response = await fetch('/api/html/reset', { method: 'POST' });
+                if (!response.ok) throw new Error(`Server returned ${response.status}`);
+                location.reload();
+            } catch (error) {
+                showConfirm('Error', 'Failed to reset.', () => {});
+            }
+        }
+    );
 });
-
-document.getElementById('btn-discard-theme-code').addEventListener('click', loadThemeCode);
 
 // ── Categories ──
 async function fetchCategories() {
@@ -285,9 +279,9 @@ document.getElementById('dynamic-content').addEventListener('click', (e) => {
     if (deleteServiceBtn) {
         e.preventDefault();
         const id = deleteServiceBtn.dataset.deleteService;
-        if (confirm('Remove this service?')) {
+        showConfirm('Remove Service?', 'This service will be removed from the dashboard.', () => {
             fetch(`/api/services/${id}`, { method: 'DELETE' }).then(() => location.reload());
-        }
+        });
         return;
     }
 
@@ -295,105 +289,15 @@ document.getElementById('dynamic-content').addEventListener('click', (e) => {
     if (deleteCatBtn) {
         e.preventDefault();
         const cat = deleteCatBtn.dataset.deleteCategory;
-        if (confirm(`Remove the '${cat}' category?`)) {
+        showConfirm('Remove Category?', `The <strong>"${cat}"</strong> category will be removed.`, () => {
             fetch(`/api/categories/${encodeURIComponent(cat)}`, { method: 'DELETE' }).then(() => location.reload());
-        }
+        });
     }
-});
-
-// ── Custom Confirmation Dialog ──
-function showConfirm(title, message, onConfirm) {
-    const overlay = document.createElement('div');
-    overlay.className = 'confirm-overlay';
-    overlay.innerHTML = `
-        <div class="confirm-box">
-            <h3>${title}</h3>
-            <p>${message}</p>
-            <div class="confirm-actions">
-                <button type="button" class="btn-secondary confirm-cancel">Cancel</button>
-                <button type="button" class="btn-primary confirm-ok">Confirm</button>
-            </div>
-        </div>
-    `;
-    document.body.appendChild(overlay);
-
-    overlay.querySelector('.confirm-cancel').addEventListener('click', () => overlay.remove());
-    overlay.querySelector('.confirm-ok').addEventListener('click', () => {
-        overlay.remove();
-        onConfirm();
-    });
-    overlay.addEventListener('click', (e) => {
-        if (e.target === overlay) overlay.remove();
-    });
-}
-
-// ── HTML Editor ──
-let originalHtml = '';
-
-async function loadHtmlCode() {
-    const res = await fetch('/api/html');
-    const data = await res.json();
-    document.getElementById('html-code-editor').value = data.content;
-    originalHtml = data.content;
-}
-
-document.getElementById('btn-save-html').addEventListener('click', (e) => {
-    const content = document.getElementById('html-code-editor').value;
-    if (content === originalHtml) {
-        showConfirm('No Changes', 'No changes were detected in the HTML.', () => {});
-        return;
-    }
-
-    showConfirm(
-        'Save HTML Changes?',
-        'This will modify the page structure. If something breaks, you can use <strong>"Reset to Default"</strong> to restore the original template.',
-        async () => {
-            const btn = e.target;
-            const originalText = btn.innerText;
-            btn.innerText = 'Saving...';
-
-            try {
-                const response = await fetch('/api/html', {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ content })
-                });
-                if (!response.ok) throw new Error(`Server returned ${response.status}`);
-                location.reload();
-            } catch (error) {
-                showConfirm('Error', 'Failed to save HTML changes.', () => {});
-                btn.innerText = originalText;
-            }
-        }
-    );
-});
-
-document.getElementById('btn-discard-html').addEventListener('click', loadHtmlCode);
-
-document.getElementById('btn-reset-html').addEventListener('click', () => {
-    showConfirm(
-        'Reset HTML?',
-        'This will discard <strong>all your HTML customizations</strong> and restore the original built-in template.',
-        async () => {
-            try {
-                const response = await fetch('/api/html/reset', { method: 'POST' });
-                if (!response.ok) throw new Error(`Server returned ${response.status}`);
-                location.reload();
-            } catch (error) {
-                showConfirm('Error', 'Failed to reset HTML.', () => {});
-            }
-        }
-    );
 });
 
 // ── Category dropdown button ──
 document.getElementById('category-dropdown-btn').addEventListener('click', (e) => {
     toggleDropdown('category-dropdown', e);
-});
-
-// ── Theme dropdown button ──
-document.getElementById('theme-dropdown-btn').addEventListener('click', (e) => {
-    toggleDropdown('theme-dropdown', e);
 });
 
 // ── Go ──
