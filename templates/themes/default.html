@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+/* ── Theme Variables ── */
+:root {
+    /* ── Surface ── */
+    --color-bg:               #0a0a0a;
+    --color-text:             #e5e5e5;
+
+    /* ── Cards ── */
+    --card-bg:                #171717;
+    --card-bg-hover:          #1f1f1f;
+    --card-border:            #262626;
+    --card-border-hover:      #404040;
+    --card-radius:            0.5rem;
+    --card-hover-transform:   translateY(-2px);
+
+    /* ── Card Content ── */
+    --card-title-color:       white;
+    --card-title-weight:      500;
+    --card-desc-color:        #737373;
+    --card-delete-color:      #525252;
+
+    /* ── Section ── */
+    --color-section-title:    #737373;
+    --section-title-spacing:  0.05em;
+    --cat-delete-color:       #404040;
+
+    /* ── Header ── */
+    --color-icon:             white;
+    --color-title:            white;
+    --title-size:             1.5rem;
+    --title-weight:           300;
+    --title-bold-weight:      700;
+    --color-underline:        white;
+    --underline-height:       0.25rem;
+    --underline-width:        3rem;
+
+    /* ── Buttons ── */
+    --btn-edit-bg:            #1a1a1a;
+    --btn-edit-text:          #a3a3a3;
+    --btn-edit-border:        #333;
+    --btn-edit-hover-bg:      #262626;
+    --btn-edit-hover-text:    white;
+    --btn-edit-active-bg:     white;
+    --btn-edit-active-text:   black;
+    --btn-edit-active-border: white;
+    --btn-radius:             0.25rem;
+    --btn-font-size:          0.75rem;
+    --btn-tracking:           0.05em;
+
+    --btn-primary-bg:         white;
+    --btn-primary-text:       black;
+    --btn-primary-weight:     600;
+
+    /* ── Toolbar ── */
+    --toolbar-mb:             4rem;
+    --toolbar-link-color:     #737373;
+    --toolbar-editor-color:   #818cf8;
+    --toolbar-editor-hover-color: #a5b4fc;
+
+    /* ── Edit mode ── */
+    --color-edit-border:      #333;
+
+    /* ── Panel ── */
+    --panel-bg:               #111;
+    --panel-border:           #262626;
+    --panel-padding:          1.5rem;
+    --panel-radius:           0.5rem;
+
+    /* ── Inputs ── */
+    --input-bg:               #1a1a1a;
+    --input-border:           #333;
+    --input-text:             white;
+    --input-focus-border:     white;
+    --input-radius:           0.25rem;
+
+    /* ── Dropdowns ── */
+    --dropdown-bg:            #1a1a1a;
+    --dropdown-border:        #333;
+    --dropdown-item-color:    #d4d4d4;
+    --dropdown-item-hover-bg: #262626;
+    --category-item-color:    white;
+    --category-item-hover-bg: #262626;
+
+    /* ── Editor ── */
+    --editor-bg:              #0a0a0a;
+    --editor-text:            #4ade80;
+    --editor-border:          #333;
+    --editor-focus-border:    #6366f1;
+    --color-warning:          #eab308;
+
+    /* ── Footer ── */
+    --footer-border:          #171717;
+    --footer-color:           #525252;
+    --footer-spacing:         0.05em;
+
+    /* ── Scrollbar ── */
+    --color-scrollbar-thumb:       #262626;
+    --color-scrollbar-thumb-hover: #404040;
+
+    /* ── Misc ── */
+    --color-danger:           #ef4444;
+}
+
+/* ── Z-Index Scale ── */
+:root { --z-content: 1; --z-toolbar: 100; --z-panel: 200; --z-dropdown: 300; --z-editor: 400; }
+/* ── Base Body ── */
+body { background-color: var(--color-bg); background-image: var(--body-bg-image, none); background-size: var(--body-bg-size, auto); color: var(--color-text); font-family: 'Inter', system-ui, sans-serif; min-height: 100vh; border-top: 3px solid transparent; transition: border-color 0.3s ease; }
+body.edit-mode { border-top-color: var(--color-edit-border); }
+body:not(.edit-mode) .edit-mode-only { display: none !important; }
+body.edit-mode .edit-mode-only { animation: editFadeIn 0.3s var(--ease, ease-out) both; }
+@keyframes editFadeIn { 0% { opacity: 0; transform: translateY(-10px) scale(0.98); filter: blur(var(--blur-amount, 0px)); } 100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); } }
+@keyframes dropFade { 0% { opacity: 0; transform: translateY(-8px) scale(0.98); filter: blur(var(--blur-amount, 0px)); } 100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); } }
+.animate-drop-fade { animation: dropFade 0.25s var(--ease, ease-out) both; transform-origin: top; }
+details > summary { list-style: none; user-select: none; }
+details > summary::-webkit-details-marker { display: none; }
+::-webkit-scrollbar { width: var(--scrollbar-width, 8px); }
+::-webkit-scrollbar-track { background: var(--color-bg); }
+::-webkit-scrollbar-thumb { background: var(--color-scrollbar-thumb); border-radius: var(--scrollbar-radius, 4px); }
+::-webkit-scrollbar-thumb:hover { background: var(--color-scrollbar-thumb-hover); }
+.service-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--card-radius, 0.5rem); transition: all var(--card-transition-duration, 0.2s) var(--card-transition-ease, ease-in-out); }
+.service-card:hover { background: var(--card-bg-hover); border-color: var(--card-border-hover); transform: var(--card-hover-transform, translateY(-2px)); box-shadow: var(--card-hover-shadow, none); }
+.section-title { color: var(--color-section-title); letter-spacing: var(--section-title-spacing, 0.05em); text-transform: uppercase; font-size: var(--section-title-size, 0.75rem); font-weight: var(--section-title-weight, 700); text-shadow: var(--section-title-shadow, none); }
+.header-icon { color: var(--color-icon); filter: var(--icon-filter, none); transition: transform 0.5s; }
+.dashboard-title { color: var(--color-title); font-size: var(--title-size, 1.5rem); font-weight: var(--title-weight, 300); letter-spacing: var(--title-tracking, -0.025em); }
+.dashboard-title .title-bold { font-weight: var(--title-bold-weight, 700); color: var(--color-title-bold, inherit); }
+.title-underline { height: var(--underline-height, 0.25rem); width: var(--underline-width, 3rem); background: var(--color-underline); margin-top: 0.5rem; border-radius: var(--underline-radius, 0); box-shadow: var(--underline-shadow, none); }
+.edit-btn { display: flex; align-items: center; gap: 0.5rem; background: var(--btn-edit-bg); color: var(--btn-edit-text); border: 1px solid var(--btn-edit-border); padding: 0.625rem 1.25rem; border-radius: var(--btn-radius, 0.25rem); font-size: var(--btn-font-size, 0.75rem); font-weight: var(--btn-font-weight, 700); text-transform: uppercase; letter-spacing: var(--btn-tracking, 0.05em); outline: none; transition: all 0.2s; cursor: pointer; backdrop-filter: var(--btn-backdrop, none); }
+.edit-btn:hover { background: var(--btn-edit-hover-bg, var(--btn-edit-bg)); color: var(--btn-edit-hover-text, white); border-color: var(--btn-edit-hover-border, var(--btn-edit-border)); }
+.edit-btn.active { background: var(--btn-edit-active-bg); color: var(--btn-edit-active-text); border-color: var(--btn-edit-active-border); }
+.theme-selector-btn { display: flex; align-items: center; gap: 0.5rem; background: var(--btn-theme-bg, var(--btn-edit-bg)); color: var(--btn-theme-text, var(--btn-edit-text)); border: 1px solid var(--btn-theme-border, var(--btn-edit-border)); padding: 0.625rem 1rem 0.625rem 1.25rem; border-radius: var(--btn-radius, 0.25rem); font-size: var(--btn-font-size, 0.75rem); font-weight: var(--btn-font-weight, 700); text-transform: uppercase; letter-spacing: var(--btn-tracking, 0.05em); outline: none; transition: all 0.2s; cursor: pointer; backdrop-filter: var(--btn-backdrop, none); }
+.theme-selector-btn:hover { background: var(--btn-theme-hover-bg, var(--btn-edit-hover-bg)); border-color: var(--btn-theme-hover-border, var(--btn-edit-hover-border)); }
+.edit-toolbar { position: relative; z-index: var(--z-toolbar); display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: var(--toolbar-mb, 4rem); padding: var(--toolbar-padding, 0); background: var(--toolbar-bg, transparent); border-radius: var(--toolbar-radius, 0); border: var(--toolbar-border, none); backdrop-filter: var(--toolbar-backdrop, none); }
+.toolbar-link { cursor: pointer; font-size: var(--toolbar-font-size, 0.75rem); font-weight: var(--toolbar-font-weight, 700); color: var(--toolbar-link-color); text-transform: uppercase; letter-spacing: var(--toolbar-link-spacing, 0.05em); transition: color 0.2s; display: inline-block; padding: var(--toolbar-link-padding, 0 0.5rem); border-radius: var(--toolbar-link-radius, 0); background: transparent; border: none; }
+.toolbar-link:hover { color: var(--toolbar-link-hover-color, white); background: var(--toolbar-link-hover-bg, transparent); }
+.toolbar-link--editor { color: var(--toolbar-editor-color, var(--toolbar-link-color)); }
+.toolbar-link--editor:hover { color: var(--toolbar-editor-hover-color, var(--toolbar-link-hover-color)); }
+.toolbar-link--danger { color: var(--color-danger, #ef4444); }
+.toolbar-link--danger:hover { color: var(--color-danger-hover, var(--toolbar-link-hover-color)); }
+.editor-panel { position: absolute; z-index: var(--z-panel); margin-top: 1rem; padding: var(--panel-padding, 1.5rem); background: var(--panel-bg); border: 1px solid var(--panel-border); border-radius: var(--panel-radius, 0.5rem); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); backdrop-filter: var(--panel-backdrop, none); width: 100%; left: 0; }
+.editor-panel--narrow { max-width: 28rem; left: 0; }
+@media (min-width: 640px) { .editor-panel--narrow { left: auto; } }
+.editor-panel--wide { max-width: 56rem; }
+.editor-panel--full { right: 0; z-index: var(--z-editor); }
+.panel-input { background: var(--input-bg) !important; border: 1px solid var(--input-border) !important; color: var(--input-text) !important; padding: 0.75rem; border-radius: var(--input-radius, 0.25rem); font-size: 0.875rem; width: 100%; outline: none; transition: border-color 0.2s; backdrop-filter: var(--input-backdrop, none); }
+.panel-input:focus { border-color: var(--input-focus-border) !important; box-shadow: var(--input-focus-shadow, none); }
+.panel-input-label { font-size: var(--label-size, 0.5625rem); font-weight: 700; color: var(--label-color, var(--toolbar-link-color)); margin-left: 0.25rem; }
+.btn-primary { background: var(--btn-primary-bg); color: var(--btn-primary-text); font-weight: var(--btn-primary-weight, 600); font-size: var(--btn-primary-size, 0.875rem); padding: 0.625rem 1.5rem; border-radius: var(--btn-primary-radius, var(--btn-radius, 0.25rem)); border: none; cursor: pointer; transition: all 0.2s; text-transform: var(--btn-primary-transform, none); letter-spacing: var(--btn-primary-tracking, normal); box-shadow: var(--btn-primary-shadow, none); }
+.btn-primary:hover { background: var(--btn-primary-hover-bg, var(--btn-primary-bg)); box-shadow: var(--btn-primary-hover-shadow, var(--btn-primary-shadow, none)); filter: brightness(1.1); }
+.btn-secondary { background: transparent; border: none; color: var(--btn-secondary-text, var(--toolbar-link-color)); font-size: 0.875rem; cursor: pointer; transition: color 0.2s; padding: 0.5rem 1rem; }
+.btn-secondary:hover { color: var(--btn-secondary-hover-text, white); }
+.dropdown-panel { position: absolute; right: 0; margin-top: 0.5rem; width: 12rem; border-radius: var(--dropdown-radius, 0.375rem); background: var(--dropdown-bg); border: 1px solid var(--dropdown-border); box-shadow: var(--dropdown-shadow, 0 10px 25px rgba(0, 0, 0, 0.5)); overflow: hidden; backdrop-filter: var(--dropdown-backdrop, none); z-index: var(--z-dropdown); }
+.dropdown-item { display: block; padding: 0.75rem 1rem; font-size: var(--dropdown-item-size, 0.75rem); color: var(--dropdown-item-color); font-weight: var(--dropdown-item-weight, 700); text-transform: uppercase; letter-spacing: var(--dropdown-item-spacing, 0.05em); transition: all 0.15s; text-decoration: none; border-bottom: var(--dropdown-item-border, none); }
+.dropdown-item:hover { background: var(--dropdown-item-hover-bg); color: var(--dropdown-item-hover-color, white); }
+.category-dropdown { position: absolute; z-index: var(--z-dropdown); width: 100%; margin-top: 0.25rem; max-height: 12rem; overflow-y: auto; border-radius: var(--dropdown-radius, 0.375rem); background: var(--dropdown-bg); border: 1px solid var(--dropdown-border); box-shadow: var(--dropdown-shadow, 0 10px 25px rgba(0, 0, 0, 0.5)); backdrop-filter: var(--dropdown-backdrop, none); }
+.category-item { display: block; padding: 0.625rem 1rem; font-size: 0.875rem; color: var(--category-item-color, var(--dropdown-item-color)); transition: all 0.15s; text-decoration: none; border-bottom: var(--dropdown-item-border, none); }
+.category-item:hover { background: var(--category-item-hover-bg, var(--dropdown-item-hover-bg)); color: var(--category-item-hover-color, white); }
+.category-btn { display: flex; justify-content: space-between; align-items: center; background: var(--input-bg); color: var(--input-text, white); border: 1px solid var(--input-border); padding: 0.75rem; border-radius: var(--input-radius, 0.25rem); font-size: 0.875rem; outline: none; transition: all 0.2s; width: 100%; cursor: pointer; }
+.category-btn:hover { background: var(--category-btn-hover-bg, var(--input-bg)); }
+.category-btn:focus { border-color: var(--input-focus-border); }
+.code-editor { width: 100%; height: 500px; background: var(--editor-bg, var(--color-bg)); color: var(--editor-text, #4ade80); font-family: monospace; font-size: var(--editor-font-size, 0.75rem); padding: 1rem; border: 1px solid var(--editor-border, var(--input-border)); border-radius: var(--editor-radius, var(--input-radius, 0.25rem)); outline: none; transition: border-color 0.2s; line-height: var(--editor-line-height, 1.5); resize: vertical; tab-size: 4; }
+.code-editor:focus { border-color: var(--editor-focus-border, var(--input-focus-border)); }
+.dashboard-footer { margin-top: 8rem; padding-top: 2rem; border-top: 1px solid var(--footer-border); display: flex; justify-content: space-between; align-items: center; color: var(--footer-color); font-size: var(--footer-size, 0.625rem); letter-spacing: var(--footer-spacing, 0.1em); text-transform: uppercase; font-weight: var(--footer-weight, 400); }
+.card-title { color: var(--card-title-color, white); font-weight: var(--card-title-weight, 500); font-size: var(--card-title-size, 1rem); letter-spacing: var(--card-title-tracking, normal); text-transform: var(--card-title-transform, none); margin-bottom: 0.25rem; }
+.card-desc { color: var(--card-desc-color); font-size: var(--card-desc-size, 0.75rem); margin-top: 0.25rem; font-weight: var(--card-desc-weight, 400); letter-spacing: var(--card-desc-tracking, normal); line-height: var(--card-desc-line-height, 1.5); opacity: var(--card-desc-opacity, 1); }
+.card-delete-btn { position: absolute; top: 1rem; right: 1rem; color: var(--card-delete-color); opacity: 0; transition: all 0.2s; cursor: pointer; background: var(--card-delete-bg, transparent); border: var(--card-delete-border, none); padding: var(--card-delete-padding, 0); border-radius: var(--card-delete-radius, 0); }
+.card-delete-btn:hover { color: var(--card-delete-hover-color, #ef4444); background: var(--card-delete-hover-bg, transparent); }
+.service-card:hover .card-delete-btn { opacity: 1; }
+.cat-delete-btn { opacity: 0; transition: all 0.2s; font-size: var(--cat-delete-size, 0.75rem); font-weight: var(--cat-delete-weight, 400); color: var(--cat-delete-color); text-transform: var(--cat-delete-transform, lowercase); letter-spacing: var(--cat-delete-tracking, normal); background: var(--cat-delete-bg, transparent); border: var(--cat-delete-border, none); padding: var(--cat-delete-padding, 0); border-radius: var(--cat-delete-radius, 0); cursor: pointer; }
+.cat-delete-btn:hover { color: var(--cat-delete-hover-color, #ef4444); }
+.section-title:hover .cat-delete-btn { opacity: 1; }
+.editor-warning { font-size: 0.75rem; color: var(--color-warning, #eab308); }
+.panel-heading { font-size: var(--panel-heading-size, 0.75rem); font-weight: var(--panel-heading-weight, 700); color: var(--panel-heading-color, var(--toolbar-link-color)); text-transform: uppercase; letter-spacing: var(--panel-heading-spacing, 0.05em); margin-bottom: 1rem; }
+.confirm-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px); z-index: 9999; display: flex; align-items: center; justify-content: center; animation: dropFade 0.2s ease-out both; }
+.confirm-box { background: var(--panel-bg, #1a1a2e); border: 1px solid var(--panel-border, #333); border-radius: var(--panel-radius, 0.5rem); padding: 2rem; max-width: 28rem; width: 90%; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7); }
+.confirm-box h3 { color: var(--color-title, white); font-size: 1rem; font-weight: 700; margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; }
+.confirm-box p { color: var(--color-text, #aaa); font-size: 0.85rem; line-height: 1.6; margin-bottom: 1.5rem; }
+.confirm-actions { display: flex; gap: 0.75rem; justify-content: flex-end; }
+    </style>
+</head>
+<body class="p-6 md:p-16">
+
+    <!-- ── Header ── -->
+    <div class="flex items-center justify-between mb-12">
+        <div class="flex items-center gap-4">
+            <svg class="header-icon w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line>
+            </svg>
+            <div>
+                <h1 class="dashboard-title">System <span class="title-bold">Dashboard</span></h1>
+                <div class="title-underline"></div>
+            </div>
+        </div>
+        <div class="flex items-center gap-3">
+            <!-- Theme Selector -->
+            <div class="relative" id="theme-selector" data-value="default">
+                <button id="theme-dropdown-btn" class="theme-selector-btn">
+                    <span id="theme-selected-text">Default</span>
+                    <svg class="w-3 h-3 opacity-50" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+                </button>
+                <div id="theme-dropdown" class="dropdown-panel hidden">
+                    <div id="theme-options"></div>
+                </div>
+            </div>
+            <!-- Edit Button -->
+            <button id="edit-mode-btn" class="edit-btn">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                <span id="edit-btn-text">Edit</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ── Edit Toolbar ── -->
+    <div class="edit-mode-only">
+        <div class="edit-toolbar">
+            <!-- Add Service -->
+            <details id="details-service">
+                <summary class="toolbar-link">+ Add Service</summary>
+                <div class="editor-panel editor-panel--narrow animate-drop-fade">
+                    <div class="flex flex-col gap-3">
+                        <input id="svc-name" type="text" class="panel-input" placeholder="Name">
+                        <input id="svc-desc" type="text" class="panel-input" placeholder="Description">
+                        <input id="svc-url" type="text" class="panel-input" placeholder="URL">
+                        <div class="relative" id="category">
+                            <button id="category-dropdown-btn" type="button" class="category-btn">
+                                <span id="category-selected-text">Select Category...</span>
+                                <svg class="w-4 h-4 opacity-50" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+                            </button>
+                            <div id="category-dropdown" class="category-dropdown hidden">
+                                <div id="category-options"></div>
+                            </div>
+                        </div>
+                        <button id="btn-add-service" class="btn-primary mt-1">Save to Dashboard</button>
+                    </div>
+                </div>
+            </details>
+
+            <!-- Add Category -->
+            <details id="details-category">
+                <summary class="toolbar-link">+ Add Category</summary>
+                <div class="editor-panel editor-panel--narrow animate-drop-fade">
+                    <div class="flex gap-3">
+                        <input id="new-category-name" type="text" class="panel-input" placeholder="Category name">
+                        <button id="btn-add-category" class="btn-primary whitespace-nowrap">Add</button>
+                    </div>
+                </div>
+            </details>
+
+            <!-- Clone Theme -->
+            <details id="details-theme-clone">
+                <summary class="toolbar-link">+ Clone Theme</summary>
+                <div class="editor-panel editor-panel--narrow animate-drop-fade">
+                    <div class="flex gap-3">
+                        <input id="new-theme-name" type="text" class="panel-input" placeholder="New theme name">
+                        <button id="btn-clone-theme" class="btn-primary whitespace-nowrap">Clone</button>
+                    </div>
+                </div>
+            </details>
+
+            <!-- Edit Theme -->
+            <details id="details-theme-edit">
+                <summary class="toolbar-link toolbar-link--editor">&lt;/&gt; Edit Theme</summary>
+                <div class="editor-panel editor-panel--full animate-drop-fade">
+                    <div class="flex flex-col gap-4">
+                        <div class="flex items-center justify-between">
+                            <span class="panel-heading !mb-0">Theme Editor</span>
+                            <span class="editor-warning">Warning: Editing this directly changes your UI!</span>
+                        </div>
+                        <textarea id="html-code-editor" class="code-editor"></textarea>
+                        <div class="flex items-center gap-3">
+                            <button id="btn-save-theme-code" class="btn-primary">Save &amp; Compile</button>
+                            <button id="btn-discard-theme-code" class="btn-secondary">Discard Changes</button>
+                            <div class="flex-1"></div>
+                            <button id="btn-reset-theme" class="btn-secondary" style="color: var(--color-danger)">Reset to Default</button>
+                        </div>
+                    </div>
+                </div>
+            </details>
+
+            <!-- Delete Theme -->
+            <button id="btn-delete-theme" class="toolbar-link toolbar-link--danger">- Delete Theme</button>
+        </div>
+    </div>
+
+    <!-- ── Dynamic Content ── -->
+    <div id="dynamic-content"></div>
+
+    <!-- ── Footer ── -->
+    <footer class="dashboard-footer">
+        <span>Local Network</span>
+        <span>All Systems Operational</span>
+    </footer>
+
+    <script src="/static/js/dashboard.js"></script>
+</body>
+</html>
