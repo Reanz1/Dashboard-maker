@@ -6,484 +6,14 @@
     <title>{{ title }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <style>
-/* ── Theme Variables ── */
-:root {
-    --z-content:   1;
-    --z-toolbar:   100;
-    --z-panel:     200;
-    --z-dropdown:  300;
-    --z-editor:    400;
-
-    /* ── Surface ── */
-    --color-bg:               #00080f;
-    --color-text:             #b3d9ff;
-    --body-bg-image:          radial-gradient(circle at 15% 50%, rgba(0, 43, 77, 0.4) 0%, transparent 50%),
-                              radial-gradient(circle at 85% 30%, rgba(0, 34, 61, 0.4) 0%, transparent 50%);
-    --body-bg-size:           200% 200%;
-
-    /* ── Animation ── */
-    --ease:                   cubic-bezier(0.2, 0.8, 0.2, 1);
-    --blur-amount:            4px;
-
-    /* ── Cards ── */
-    --card-bg:                linear-gradient(145deg, rgba(10, 31, 46, 0.6) 0%, rgba(5, 15, 23, 0.4) 100%);
-    --card-bg-hover:          linear-gradient(145deg, rgba(14, 46, 70, 0.8) 0%, rgba(10, 31, 46, 0.6) 100%);
-    --card-border:            rgba(56, 189, 248, 0.1);
-    --card-border-hover:      rgba(56, 189, 248, 0.4);
-    --card-radius:            1rem;
-    --card-transition-duration: 0.4s;
-    --card-transition-ease:   cubic-bezier(0.2, 0.8, 0.2, 1);
-    --card-hover-transform:   translateY(-6px) scale(1.02);
-    --card-hover-shadow:      0 12px 40px rgba(56, 189, 248, 0.15);
-
-    /* ── Card Content ── */
-    --card-title-color:       #f0f9ff;
-    --card-title-weight:      600;
-    --card-title-tracking:    0.025em;
-    --card-title-size:        1.125rem;
-    --card-desc-color:        rgba(125, 211, 252, 0.6);
-    --card-desc-size:         0.75rem;
-    --card-desc-weight:       300;
-    --card-desc-line-height:  1.6;
-    --card-delete-color:      #0c4a6e;
-    --card-delete-hover-color: #fda4af;
-    --card-delete-bg:         rgba(76, 5, 25, 0.5);
-    --card-delete-border:     1px solid rgba(136, 19, 55, 0.5);
-    --card-delete-padding:    0.5rem;
-    --card-delete-radius:     0.5rem;
-    --card-delete-hover-bg:   #881337;
-
-    /* ── Section ── */
-    --color-section-title:    #7dd3fc;
-    --section-title-spacing:  0.2em;
-    --section-title-size:     0.7rem;
-    --section-title-weight:   800;
-    --cat-delete-color:       #0c4a6e;
-    --cat-delete-hover-color: #fda4af;
-    --cat-delete-size:        0.625rem;
-    --cat-delete-transform:   uppercase;
-    --cat-delete-tracking:    0.05em;
-    --cat-delete-bg:          rgba(76, 5, 25, 0.3);
-    --cat-delete-border:      1px solid rgba(136, 19, 55, 0.5);
-    --cat-delete-padding:     0.375rem 0.75rem;
-    --cat-delete-radius:      0.375rem;
-
-    /* ── Header ── */
-    --color-icon:             #38bdf8;
-    --icon-filter:            drop-shadow(0 0 8px rgba(56, 189, 248, 0.5));
-    --color-title:            #f0f9ff;
-    --color-title-bold:       #38bdf8;
-    --title-size:             1.875rem;
-    --title-weight:           300;
-    --title-bold-weight:      700;
-    --color-underline:        #38bdf8;
-    --underline-height:       0.25rem;
-    --underline-width:        4rem;
-    --underline-radius:       9999px;
-
-    /* ── Buttons ── */
-    --btn-edit-bg:            rgba(0, 21, 36, 0.8);
-    --btn-edit-text:          #38bdf8;
-    --btn-edit-border:        rgba(12, 74, 110, 0.5);
-    --btn-edit-hover-bg:      rgba(12, 74, 110, 0.4);
-    --btn-edit-hover-text:    white;
-    --btn-edit-hover-border:  rgba(56, 189, 248, 0.5);
-    --btn-edit-active-bg:     #f43f5e;
-    --btn-edit-active-text:   white;
-    --btn-edit-active-border: #fb7185;
-    --btn-radius:             0.5rem;
-    --btn-font-size:          0.75rem;
-    --btn-font-weight:        700;
-    --btn-tracking:           0.05em;
-    --btn-backdrop:           blur(8px);
-
-    --btn-primary-bg:         #0ea5e9;
-    --btn-primary-text:       white;
-    --btn-primary-weight:     700;
-    --btn-primary-radius:     0.5rem;
-    --btn-primary-shadow:     0 0 20px rgba(14, 165, 233, 0.3);
-    --btn-primary-hover-shadow: 0 0 30px rgba(14, 165, 233, 0.5);
-
-    /* ── Toolbar ── */
-    --toolbar-mb:             3rem;
-    --toolbar-padding:        1rem;
-    --toolbar-bg:             rgba(76, 5, 25, 0.2);
-    --toolbar-radius:         0.75rem;
-    --toolbar-border:         1px solid rgba(136, 19, 55, 0.3);
-    --toolbar-backdrop:       blur(4px);
-    --toolbar-link-color:     #38bdf8;
-    --toolbar-link-spacing:   0.05em;
-    --toolbar-link-padding:   0.5rem 0.75rem;
-    --toolbar-link-radius:    0.5rem;
-    --toolbar-link-hover-bg:  rgba(12, 74, 110, 0.3);
-    --toolbar-editor-color:   #67e8f9;
-    --color-danger:           #f43f5e;
-    --color-danger-hover:     white;
-
-    /* ── Edit mode ── */
-    --color-edit-border:      #f43f5e;
-
-    /* ── Panel ── */
-    --panel-bg:               rgba(0, 21, 36, 0.95);
-    --panel-border:           rgba(12, 74, 110, 0.5);
-    --panel-padding:          2rem;
-    --panel-radius:           1rem;
-    --panel-backdrop:         blur(20px);
-    --panel-heading-color:    #38bdf8;
-    --panel-heading-spacing:  0.05em;
-
-    /* ── Inputs ── */
-    --input-bg:               rgba(0, 11, 20, 0.6);
-    --input-border:           rgba(56, 189, 248, 0.2);
-    --input-text:             #e0f2fe;
-    --input-focus-border:     #38bdf8;
-    --input-focus-shadow:     0 0 10px rgba(56, 189, 248, 0.1);
-    --input-radius:           0.5rem;
-    --input-backdrop:         blur(8px);
-    --label-color:            #38bdf8;
-
-    /* ── Dropdowns ── */
-    --dropdown-bg:            rgba(0, 21, 36, 0.95);
-    --dropdown-border:        rgba(12, 74, 110, 0.5);
-    --dropdown-radius:        0.75rem;
-    --dropdown-shadow:        0 10px 40px rgba(0, 0, 0, 0.5);
-    --dropdown-backdrop:      blur(20px);
-    --dropdown-item-color:    #bae6fd;
-    --dropdown-item-hover-bg: rgba(12, 74, 110, 0.4);
-    --category-item-color:    #bae6fd;
-    --category-item-hover-bg: rgba(12, 74, 110, 0.4);
-    --category-btn-hover-bg:  rgba(12, 74, 110, 0.3);
-
-    /* ── Editor ── */
-    --editor-bg:              #00080f;
-    --editor-text:            #67e8f9;
-    --editor-border:          rgba(12, 74, 110, 0.5);
-    --editor-focus-border:    #38bdf8;
-    --editor-font-size:       0.875rem;
-    --editor-radius:          0.75rem;
-    --editor-line-height:     1.6;
-
-    /* ── Footer ── */
-    --footer-border:          rgba(12, 74, 110, 0.3);
-    --footer-color:           #0c4a6e;
-    --footer-size:            0.625rem;
-    --footer-spacing:         0.2em;
-    --footer-weight:          700;
-
-    /* ── Scrollbar ── */
-    --scrollbar-width:        6px;
-    --scrollbar-radius:       10px;
-    --color-scrollbar-thumb:       rgba(56, 189, 248, 0.3);
-    --color-scrollbar-thumb-hover: rgba(56, 189, 248, 0.6);
-}
-
-/* ── Base Body ── */
-body {
-    background-color: var(--color-bg);
-    background-image: var(--body-bg-image, none);
-    background-size: var(--body-bg-size, auto);
-    color: var(--color-text);
-    font-family: 'Inter', system-ui, sans-serif;
-    min-height: 100vh;
-    border-top: 3px solid transparent;
-    transition: border-color 0.3s ease;
-    animation: oceanCurrents 15s ease infinite alternate;
-    overflow-x: hidden;
-}
-body.edit-mode { border-top-color: var(--color-edit-border); }
-
-@keyframes oceanCurrents {
-    0% { background-position: 0% 50%; }
-    100% { background-position: 100% 50%; }
-}
-
-/* ── Edit Mode Visibility ── */
-body:not(.edit-mode) .edit-mode-only { display: none !important; }
-body.edit-mode .edit-mode-only {
-    animation: editFadeIn 0.3s var(--ease, ease-out) both;
-}
-@keyframes editFadeIn {
-    0% { opacity: 0; transform: translateY(-10px) scale(0.98); filter: blur(var(--blur-amount, 0px)); }
-    100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
-}
-
-/* ── Drop Fade Animation ── */
-@keyframes dropFade {
-    0% { opacity: 0; transform: translateY(-8px) scale(0.98); filter: blur(var(--blur-amount, 0px)); }
-    100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
-}
-.animate-drop-fade { animation: dropFade 0.25s var(--ease, ease-out) both; transform-origin: top; }
-
-/* ── Details Reset ── */
-details > summary { list-style: none; user-select: none; }
-details > summary::-webkit-details-marker { display: none; }
-
-/* ── Scrollbar ── */
-::-webkit-scrollbar { width: var(--scrollbar-width, 8px); }
-::-webkit-scrollbar-track { background: var(--color-bg); }
-::-webkit-scrollbar-thumb { background: var(--color-scrollbar-thumb); border-radius: var(--scrollbar-radius, 4px); }
-::-webkit-scrollbar-thumb:hover { background: var(--color-scrollbar-thumb-hover); }
-
-/* ── Service Card ── */
-.service-card {
-    background: var(--card-bg);
-    border: 1px solid var(--card-border);
-    border-radius: var(--card-radius, 0.5rem);
-    transition: all var(--card-transition-duration, 0.2s) var(--card-transition-ease, ease-in-out);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
-    position: relative;
-    overflow: hidden;
-}
-.service-card:hover {
-    background: var(--card-bg-hover);
-    border-color: var(--card-border-hover);
-    transform: var(--card-hover-transform, translateY(-2px));
-    box-shadow: var(--card-hover-shadow, none);
-}
-.service-card::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    padding: 1px;
-    background: linear-gradient(to bottom right, rgba(255,255,255,0.1), transparent 50%);
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    pointer-events: none;
-}
-
-/* ── Section Title ── */
-.section-title {
-    color: var(--color-section-title);
-    letter-spacing: var(--section-title-spacing, 0.05em);
-    text-transform: uppercase;
-    font-size: var(--section-title-size, 0.75rem);
-    font-weight: var(--section-title-weight, 700);
-    text-shadow: var(--section-title-shadow, none);
-    border-bottom: 1px solid rgba(56, 189, 248, 0.15);
-    padding-bottom: 0.75rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-/* ── Header ── */
-.header-icon { color: var(--color-icon); filter: var(--icon-filter, none); transition: transform 0.5s; }
-.dashboard-title { color: var(--color-title); font-size: var(--title-size, 1.5rem); font-weight: var(--title-weight, 300); letter-spacing: var(--title-tracking, -0.025em); }
-.dashboard-title .title-bold { font-weight: var(--title-bold-weight, 700); color: var(--color-title-bold, inherit); }
-.title-underline {
-    height: var(--underline-height, 0.25rem);
-    width: var(--underline-width, 3rem);
-    background: var(--color-underline);
-    margin-top: 0.5rem;
-    border-radius: var(--underline-radius, 0);
-    box-shadow: var(--underline-shadow, none);
-    animation: breathe 3s ease-in-out infinite;
-}
-@keyframes breathe {
-    0%, 100% { opacity: 0.6; box-shadow: 0 0 8px #38bdf8; }
-    50% { opacity: 1; box-shadow: 0 0 16px #38bdf8, 0 0 2px #fff; }
-}
-
-/* ── Ambient Glow ── */
-.ambient-glow {
-    position: absolute;
-    top: -100px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 80vw;
-    height: 300px;
-    pointer-events: none;
-    z-index: -1;
-    background: radial-gradient(ellipse at center, rgba(56, 189, 248, 0.08) 0%, transparent 60%);
-}
-
-/* ── Buttons ── */
-.edit-btn {
-    display: flex; align-items: center; gap: 0.5rem;
-    background: var(--btn-edit-bg); color: var(--btn-edit-text);
-    border: 1px solid var(--btn-edit-border);
-    padding: 0.625rem 1.25rem; border-radius: var(--btn-radius, 0.25rem);
-    font-size: var(--btn-font-size, 0.75rem); font-weight: var(--btn-font-weight, 700);
-    text-transform: uppercase; letter-spacing: var(--btn-tracking, 0.05em);
-    outline: none; transition: all 0.2s; cursor: pointer;
-    backdrop-filter: var(--btn-backdrop, none);
-}
-.edit-btn:hover { background: var(--btn-edit-hover-bg, var(--btn-edit-bg)); color: var(--btn-edit-hover-text, white); border-color: var(--btn-edit-hover-border, var(--btn-edit-border)); }
-.edit-btn.active { background: var(--btn-edit-active-bg); color: var(--btn-edit-active-text); border-color: var(--btn-edit-active-border); }
-
-.theme-selector-btn {
-    display: flex; align-items: center; gap: 0.5rem;
-    background: var(--btn-theme-bg, var(--btn-edit-bg)); color: var(--btn-theme-text, var(--btn-edit-text));
-    border: 1px solid var(--btn-theme-border, var(--btn-edit-border));
-    padding: 0.625rem 1rem 0.625rem 1.25rem; border-radius: var(--btn-radius, 0.25rem);
-    font-size: var(--btn-font-size, 0.75rem); font-weight: var(--btn-font-weight, 700);
-    text-transform: uppercase; letter-spacing: var(--btn-tracking, 0.05em);
-    outline: none; transition: all 0.2s; cursor: pointer;
-    backdrop-filter: var(--btn-backdrop, none);
-}
-.theme-selector-btn:hover { background: var(--btn-theme-hover-bg, var(--btn-edit-hover-bg)); border-color: var(--btn-theme-hover-border, var(--btn-edit-hover-border)); }
-
-/* ── Toolbar ── */
-.edit-toolbar {
-    position: relative; z-index: var(--z-toolbar);
-    display: flex; flex-wrap: wrap; gap: 1rem;
-    margin-bottom: var(--toolbar-mb, 4rem);
-    padding: var(--toolbar-padding, 0);
-    background: var(--toolbar-bg, transparent);
-    border-radius: var(--toolbar-radius, 0);
-    border: var(--toolbar-border, none);
-    backdrop-filter: var(--toolbar-backdrop, none);
-}
-.toolbar-link {
-    cursor: pointer; font-size: var(--toolbar-font-size, 0.75rem); font-weight: var(--toolbar-font-weight, 700);
-    color: var(--toolbar-link-color); text-transform: uppercase;
-    letter-spacing: var(--toolbar-link-spacing, 0.05em); transition: color 0.2s;
-    display: inline-block; padding: var(--toolbar-link-padding, 0 0.5rem);
-    border-radius: var(--toolbar-link-radius, 0); background: transparent; border: none;
-}
-.toolbar-link:hover { color: var(--toolbar-link-hover-color, white); background: var(--toolbar-link-hover-bg, transparent); }
-.toolbar-link--editor { color: var(--toolbar-editor-color, var(--toolbar-link-color)); }
-.toolbar-link--editor:hover { color: var(--toolbar-editor-hover-color, var(--toolbar-link-hover-color)); }
-.toolbar-link--danger { color: var(--color-danger, #ef4444); }
-.toolbar-link--danger:hover { color: var(--color-danger-hover, var(--toolbar-link-hover-color)); }
-
-/* ── Editor Panels ── */
-.editor-panel {
-    position: absolute; z-index: var(--z-panel); margin-top: 1rem;
-    padding: var(--panel-padding, 1.5rem); background: var(--panel-bg);
-    border: 1px solid var(--panel-border); border-radius: var(--panel-radius, 0.5rem);
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-    backdrop-filter: var(--panel-backdrop, none); width: 100%; left: 0;
-}
-.editor-panel--narrow { max-width: 28rem; left: 0; }
-@media (min-width: 640px) { .editor-panel--narrow { left: auto; } }
-.editor-panel--wide { max-width: 56rem; }
-.editor-panel--full { right: 0; z-index: var(--z-editor); }
-
-/* ── Panel Inputs ── */
-.panel-input {
-    background: var(--input-bg) !important; border: 1px solid var(--input-border) !important;
-    color: var(--input-text) !important; padding: 0.75rem;
-    border-radius: var(--input-radius, 0.25rem); font-size: 0.875rem;
-    width: 100%; outline: none; transition: border-color 0.2s;
-    backdrop-filter: var(--input-backdrop, none);
-}
-.panel-input:focus { border-color: var(--input-focus-border) !important; box-shadow: var(--input-focus-shadow, none); }
-.panel-input-label { font-size: var(--label-size, 0.5625rem); font-weight: 700; color: var(--label-color, var(--toolbar-link-color)); margin-left: 0.25rem; }
-
-/* ── Action Buttons ── */
-.btn-primary {
-    background: var(--btn-primary-bg); color: var(--btn-primary-text);
-    font-weight: var(--btn-primary-weight, 600); font-size: var(--btn-primary-size, 0.875rem);
-    padding: 0.625rem 1.5rem; border-radius: var(--btn-primary-radius, var(--btn-radius, 0.25rem));
-    border: none; cursor: pointer; transition: all 0.2s;
-    text-transform: var(--btn-primary-transform, none);
-    letter-spacing: var(--btn-primary-tracking, normal);
-    box-shadow: var(--btn-primary-shadow, none);
-}
-.btn-primary:hover { background: var(--btn-primary-hover-bg, var(--btn-primary-bg)); box-shadow: var(--btn-primary-hover-shadow, var(--btn-primary-shadow, none)); filter: brightness(1.1); }
-.btn-secondary { background: transparent; border: none; color: var(--btn-secondary-text, var(--toolbar-link-color)); font-size: 0.875rem; cursor: pointer; transition: color 0.2s; padding: 0.5rem 1rem; }
-.btn-secondary:hover { color: var(--btn-secondary-hover-text, white); }
-
-/* ── Dropdowns ── */
-.dropdown-panel {
-    position: absolute; right: 0; margin-top: 0.5rem; width: 12rem;
-    border-radius: var(--dropdown-radius, 0.375rem); background: var(--dropdown-bg);
-    border: 1px solid var(--dropdown-border);
-    box-shadow: var(--dropdown-shadow, 0 10px 25px rgba(0, 0, 0, 0.5));
-    overflow: hidden; backdrop-filter: var(--dropdown-backdrop, none); z-index: var(--z-dropdown);
-}
-.dropdown-item {
-    display: block; padding: 0.75rem 1rem; font-size: var(--dropdown-item-size, 0.75rem);
-    color: var(--dropdown-item-color); font-weight: var(--dropdown-item-weight, 700);
-    text-transform: uppercase; letter-spacing: var(--dropdown-item-spacing, 0.05em);
-    transition: all 0.15s; text-decoration: none; border-bottom: var(--dropdown-item-border, none);
-}
-.dropdown-item:hover { background: var(--dropdown-item-hover-bg); color: var(--dropdown-item-hover-color, white); }
-
-.category-dropdown {
-    position: absolute; z-index: var(--z-dropdown); width: 100%; margin-top: 0.25rem;
-    max-height: 12rem; overflow-y: auto; border-radius: var(--dropdown-radius, 0.375rem);
-    background: var(--dropdown-bg); border: 1px solid var(--dropdown-border);
-    box-shadow: var(--dropdown-shadow, 0 10px 25px rgba(0, 0, 0, 0.5));
-    backdrop-filter: var(--dropdown-backdrop, none);
-}
-.category-item {
-    display: block; padding: 0.625rem 1rem; font-size: 0.875rem;
-    color: var(--category-item-color, var(--dropdown-item-color));
-    transition: all 0.15s; text-decoration: none; border-bottom: var(--dropdown-item-border, none);
-}
-.category-item:hover { background: var(--category-item-hover-bg, var(--dropdown-item-hover-bg)); color: var(--category-item-hover-color, white); }
-
-.category-btn {
-    display: flex; justify-content: space-between; align-items: center;
-    background: var(--input-bg); color: var(--input-text, white);
-    border: 1px solid var(--input-border); padding: 0.75rem;
-    border-radius: var(--input-radius, 0.25rem); font-size: 0.875rem;
-    outline: none; transition: all 0.2s; width: 100%; cursor: pointer;
-}
-.category-btn:hover { background: var(--category-btn-hover-bg, var(--input-bg)); }
-.category-btn:focus { border-color: var(--input-focus-border); }
-
-/* ── Code Editor ── */
-.code-editor {
-    width: 100%; height: 500px;
-    background: var(--editor-bg, var(--color-bg)); color: var(--editor-text, #4ade80);
-    font-family: monospace; font-size: var(--editor-font-size, 0.75rem);
-    padding: 1rem; border: 1px solid var(--editor-border, var(--input-border));
-    border-radius: var(--editor-radius, var(--input-radius, 0.25rem));
-    outline: none; transition: border-color 0.2s;
-    line-height: var(--editor-line-height, 1.5); resize: vertical; tab-size: 4;
-}
-.code-editor:focus { border-color: var(--editor-focus-border, var(--input-focus-border)); }
-
-/* ── Footer ── */
-.dashboard-footer {
-    margin-top: 8rem; padding-top: 2rem; border-top: 1px solid var(--footer-border);
-    display: flex; justify-content: space-between; align-items: center;
-    color: var(--footer-color); font-size: var(--footer-size, 0.625rem);
-    letter-spacing: var(--footer-spacing, 0.1em); text-transform: uppercase;
-    font-weight: var(--footer-weight, 400);
-}
-
-/* ── Card Content ── */
-.card-title { color: var(--card-title-color, white); font-weight: var(--card-title-weight, 500); font-size: var(--card-title-size, 1rem); letter-spacing: var(--card-title-tracking, normal); text-transform: var(--card-title-transform, none); margin-bottom: 0.25rem; }
-.card-desc { color: var(--card-desc-color); font-size: var(--card-desc-size, 0.75rem); margin-top: 0.25rem; font-weight: var(--card-desc-weight, 400); letter-spacing: var(--card-desc-tracking, normal); line-height: var(--card-desc-line-height, 1.5); opacity: var(--card-desc-opacity, 1); }
-.card-delete-btn { position: absolute; top: 1rem; right: 1rem; color: var(--card-delete-color); opacity: 0; transition: all 0.2s; cursor: pointer; background: var(--card-delete-bg, transparent); border: var(--card-delete-border, none); padding: var(--card-delete-padding, 0); border-radius: var(--card-delete-radius, 0); }
-.card-delete-btn:hover { color: var(--card-delete-hover-color, #ef4444); background: var(--card-delete-hover-bg, transparent); }
-.service-card:hover .card-delete-btn { opacity: 1; }
-.cat-delete-btn { opacity: 0; transition: all 0.2s; font-size: var(--cat-delete-size, 0.75rem); font-weight: var(--cat-delete-weight, 400); color: var(--cat-delete-color); text-transform: var(--cat-delete-transform, lowercase); letter-spacing: var(--cat-delete-tracking, normal); background: var(--cat-delete-bg, transparent); border: var(--cat-delete-border, none); padding: var(--cat-delete-padding, 0); border-radius: var(--cat-delete-radius, 0); cursor: pointer; }
-.cat-delete-btn:hover { color: var(--cat-delete-hover-color, #ef4444); }
-.section-title:hover .cat-delete-btn { opacity: 1; }
-
-/* ── Warning & Panel Heading ── */
-.editor-warning { font-size: 0.75rem; color: var(--color-warning, #eab308); }
-.panel-heading { font-size: var(--panel-heading-size, 0.75rem); font-weight: var(--panel-heading-weight, 700); color: var(--panel-heading-color, var(--toolbar-link-color)); text-transform: uppercase; letter-spacing: var(--panel-heading-spacing, 0.05em); margin-bottom: 1rem; }
-
-/* ── Confirmation Modal ── */
-.confirm-overlay {
-    position: fixed; inset: 0; background: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(4px); z-index: 9999;
-    display: flex; align-items: center; justify-content: center;
-    animation: dropFade 0.2s ease-out both;
-}
-.confirm-box { background: var(--panel-bg, #1a1a2e); border: 1px solid var(--panel-border, #333); border-radius: var(--panel-radius, 0.5rem); padding: 2rem; max-width: 28rem; width: 90%; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7); }
-.confirm-box h3 { color: var(--color-title, white); font-size: 1rem; font-weight: 700; margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; }
-.confirm-box p { color: var(--color-text, #aaa); font-size: 0.85rem; line-height: 1.6; margin-bottom: 1.5rem; }
-.confirm-actions { display: flex; gap: 0.75rem; justify-content: flex-end; }
-
-/* ── Ocean input overrides ── */
-input, select, textarea { backdrop-filter: blur(8px); }
-    </style>
+    <link rel="stylesheet" href="/static/css/base.css">
+    <link rel="stylesheet" href="/theme-css/{{ active_theme }}.css">
 </head>
-<body class="p-6 md:p-16 relative">
+<body class="p-6 md:p-16{% if active_theme == 'ocean' %} relative{% endif %}" data-theme="{{ active_theme }}">
 
+    {% if active_theme == 'ocean' %}
     <div class="ambient-glow"></div>
+    {% endif %}
 
     <div class="max-w-5xl mx-auto relative" style="z-index: var(--z-content)">
 
@@ -492,26 +22,37 @@ input, select, textarea { backdrop-filter: blur(8px); }
             <div class="flex items-center gap-6 group">
                 <div class="relative">
                     <svg class="header-icon h-12 w-12 transition-transform duration-500 group-hover:scale-110" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
-                        <path d="M2 17l10 5 10-5"></path>
-                        <path d="M2 12l10 5 10-5"></path>
+                        {{ icon_svg | safe }}
                     </svg>
                 </div>
                 <div>
-                    <h1 class="dashboard-title">System <span class="title-bold">Dashboard</span></h1>
+                    <h1 class="dashboard-title">{{ title_html | safe }}</h1>
                     <div class="title-underline"></div>
                 </div>
             </div>
 
             <div class="flex items-center gap-4">
                 <button id="edit-mode-btn" type="button" class="edit-btn"
-                        data-idle-text="Edit UI"
-                        data-active-text="Lock UI">
+                        data-idle-text="{{ edit_label }}"
+                        data-active-text="{{ edit_active_label }}">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                     </svg>
-                    <span id="edit-btn-text">Edit UI</span>
+                    <span id="edit-btn-text">{{ edit_label }}</span>
                 </button>
+
+                <div class="relative inline-block text-left">
+                    <button type="button" id="theme-dropdown-btn" class="theme-selector-btn">
+                        <span id="theme-selected-text">LOADING...</span>
+                        <svg class="w-4 h-4 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div id="theme-dropdown" class="dropdown-panel hidden animate-drop-fade origin-top-right">
+                        <div class="py-1" id="theme-options"></div>
+                    </div>
+                    <input type="hidden" id="theme-selector" value="{{ active_theme }}">
+                </div>
             </div>
         </header>
 
@@ -520,27 +61,30 @@ input, select, textarea { backdrop-filter: blur(8px); }
 
             <!-- Add Service -->
             <details class="group" id="details-service">
-                <summary class="toolbar-link">+ Add Service</summary>
+                <summary class="toolbar-link">{{ add_service_label }}</summary>
                 <div class="editor-panel editor-panel--wide animate-drop-fade">
-                    <h3 class="panel-heading">Deploy New Service</h3>
+                    {% if panel_heading_service %}
+                    <h3 class="panel-heading">{{ panel_heading_service }}</h3>
+                    {% endif %}
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        {% if show_labels %}
                         <div class="space-y-1">
                             <label class="panel-input-label">NAME</label>
-                            <input type="text" id="svc-name" placeholder="Name" class="panel-input">
+                            <input type="text" id="svc-name" placeholder="{{ name_placeholder }}" class="panel-input">
                         </div>
                         <div class="space-y-1">
-                            <label class="panel-input-label">DESCRIPTION</label>
-                            <input type="text" id="svc-desc" placeholder="Description" class="panel-input">
+                            <label class="panel-input-label">{{ desc_label }}</label>
+                            <input type="text" id="svc-desc" placeholder="{{ desc_placeholder }}" class="panel-input">
                         </div>
                         <div class="space-y-1">
-                            <label class="panel-input-label">URL</label>
-                            <input type="text" id="svc-url" placeholder="URL" class="panel-input">
+                            <label class="panel-input-label">{{ url_label }}</label>
+                            <input type="text" id="svc-url" placeholder="{{ url_placeholder }}" class="panel-input">
                         </div>
                         <div class="space-y-1">
-                            <label class="panel-input-label">CATEGORY</label>
+                            <label class="panel-input-label">{{ category_label }}</label>
                             <div class="relative w-full">
                                 <button type="button" id="category-dropdown-btn" class="category-btn">
-                                    <span id="category-selected-text" class="truncate">Select Category...</span>
+                                    <span id="category-selected-text" class="truncate">{{ select_category_text }}</span>
                                     <svg class="w-4 h-4 ml-2 flex-shrink-0 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                                     </svg>
@@ -551,16 +95,33 @@ input, select, textarea { backdrop-filter: blur(8px); }
                                 <input type="hidden" id="category" value="">
                             </div>
                         </div>
+                        {% else %}
+                        <input type="text" id="svc-name" placeholder="Name" class="panel-input">
+                        <input type="text" id="svc-desc" placeholder="Description" class="panel-input">
+                        <input type="text" id="svc-url" placeholder="URL" class="panel-input">
+                        <div class="relative w-full">
+                            <button type="button" id="category-dropdown-btn" class="category-btn">
+                                <span id="category-selected-text" class="truncate">Select Category...</span>
+                                <svg class="w-4 h-4 ml-2 flex-shrink-0 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+                            <div id="category-dropdown" class="category-dropdown hidden animate-drop-fade">
+                                <div class="py-1" id="category-options"></div>
+                            </div>
+                            <input type="hidden" id="category" value="">
+                        </div>
+                        {% endif %}
                     </div>
                     <div class="mt-6 flex justify-end">
-                        <button type="button" id="btn-add-service" class="btn-primary">Save Service</button>
+                        <button type="button" id="btn-add-service" class="btn-primary">{{ save_service_text }}</button>
                     </div>
                 </div>
             </details>
 
             <!-- Add Category -->
             <details class="group" id="details-category">
-                <summary class="toolbar-link">+ Add Category</summary>
+                <summary class="toolbar-link">{{ add_category_label }}</summary>
                 <div class="editor-panel editor-panel--narrow animate-drop-fade">
                     <div class="flex gap-4">
                         <input type="text" id="new-category-name" placeholder="Category Name" class="panel-input flex-1">
@@ -569,22 +130,52 @@ input, select, textarea { backdrop-filter: blur(8px); }
                 </div>
             </details>
 
-            <!-- Edit HTML (the single file editor) -->
+            <!-- Clone Theme -->
+            <details class="group" id="details-theme-clone">
+                <summary class="toolbar-link">{{ clone_theme_label }}</summary>
+                <div class="editor-panel editor-panel--narrow animate-drop-fade">
+                    <div class="flex gap-4">
+                        <input type="text" id="new-theme-name" placeholder="New Theme Name (e.g. Solar)" class="panel-input flex-1">
+                        <button type="button" id="btn-clone-theme" class="btn-primary">Clone</button>
+                    </div>
+                </div>
+            </details>
+
+            <!-- Edit HTML -->
             <details class="group" id="details-html-edit">
-                <summary class="toolbar-link toolbar-link--editor">&lt;/&gt; Edit Page</summary>
+                <summary class="toolbar-link toolbar-link--editor">&lt;/&gt; Edit HTML</summary>
                 <div class="editor-panel editor-panel--full animate-drop-fade">
                     <div class="flex justify-between items-center mb-4">
-                        <span class="panel-heading mb-0">Page Editor</span>
-                        <span class="editor-warning">Edit the entire page (HTML + CSS) in one file</span>
+                        <span class="panel-heading mb-0">HTML Template Editor</span>
+                        <span class="editor-warning">Changes will modify the page structure!</span>
                     </div>
                     <textarea id="html-code-editor" class="code-editor" spellcheck="false"></textarea>
                     <div class="mt-4 flex gap-4 justify-end">
                         <button type="button" id="btn-reset-html" class="btn-secondary" style="margin-right:auto; color: var(--color-danger, #ef4444);">Reset to Default</button>
-                        <button type="button" id="btn-discard-html" class="btn-secondary">Discard Changes</button>
-                        <button type="button" id="btn-save-html" class="btn-primary">Save & Apply</button>
+                        <button type="button" id="btn-discard-html" class="btn-secondary">{{ discard_text }}</button>
+                        <button type="button" id="btn-save-html" class="btn-primary">Save HTML</button>
                     </div>
                 </div>
             </details>
+
+            <!-- Edit Theme CSS -->
+            <details class="group" id="details-theme-edit">
+                <summary class="toolbar-link toolbar-link--editor">&lt;/&gt; Edit CSS</summary>
+                <div class="editor-panel editor-panel--full animate-drop-fade">
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="panel-heading mb-0">{{ editor_heading }}</span>
+                        <span class="editor-warning">{{ editor_warning }}</span>
+                    </div>
+                    <textarea id="theme-code-editor" class="code-editor" spellcheck="false"></textarea>
+                    <div class="mt-4 flex gap-4 justify-end">
+                        <button type="button" id="btn-discard-theme-code" class="btn-secondary">{{ discard_text }}</button>
+                        <button type="button" id="btn-save-theme-code" class="btn-primary">{{ save_compile_text }}</button>
+                    </div>
+                </div>
+            </details>
+
+            <!-- Delete Theme -->
+            <button type="button" id="btn-delete-theme" class="toolbar-link toolbar-link--danger">{{ delete_theme_label }}</button>
         </div>
 
         <!-- ── Dynamic Content ── -->
@@ -593,11 +184,16 @@ input, select, textarea { backdrop-filter: blur(8px); }
         <!-- ── Footer ── -->
         <footer class="dashboard-footer">
             <span class="flex items-center gap-2">
+                {% if footer_dot %}
                 <div class="w-1.5 h-1.5 rounded-full animate-pulse" style="background: var(--color-icon)"></div>
-                Local Subnet
+                {% endif %}
+                {{ footer_left }}
             </span>
             <span class="flex items-center gap-2">
-                All Systems Hydrated
+                {% if footer_status_dot %}
+                <span class="w-2 h-2 rounded-full animate-pulse" style="background: var(--color-icon); box-shadow: 0 0 8px var(--color-icon)"></span>
+                {% endif %}
+                {{ footer_right }}
             </span>
         </footer>
     </div>
