@@ -5,9 +5,10 @@ let globalCategories = [];
 const detailsService   = document.getElementById('details-service');
 const detailsCategory  = document.getElementById('details-category');
 const detailsThemeClone = document.getElementById('details-theme-clone');
+const detailsHtmlEdit  = document.getElementById('details-html-edit');
 const detailsThemeEdit = document.getElementById('details-theme-edit');
 
-const allDetails = [detailsService, detailsCategory, detailsThemeClone, detailsThemeEdit];
+const allDetails = [detailsService, detailsCategory, detailsThemeClone, detailsHtmlEdit, detailsThemeEdit];
 
 // Close other panels when one opens + replay animation
 allDetails.forEach(detail => {
@@ -22,6 +23,7 @@ allDetails.forEach(detail => {
                 void animatedChild.offsetWidth;
                 animatedChild.classList.add('animate-drop-fade');
             }
+            if (detail === detailsHtmlEdit) loadHtmlCode();
             if (detail === detailsThemeEdit) loadThemeCode();
         }
     });
@@ -297,6 +299,91 @@ document.getElementById('dynamic-content').addEventListener('click', (e) => {
             fetch(`/api/categories/${encodeURIComponent(cat)}`, { method: 'DELETE' }).then(() => location.reload());
         }
     }
+});
+
+// ── Custom Confirmation Dialog ──
+function showConfirm(title, message, onConfirm) {
+    const overlay = document.createElement('div');
+    overlay.className = 'confirm-overlay';
+    overlay.innerHTML = `
+        <div class="confirm-box">
+            <h3>${title}</h3>
+            <p>${message}</p>
+            <div class="confirm-actions">
+                <button type="button" class="btn-secondary confirm-cancel">Cancel</button>
+                <button type="button" class="btn-primary confirm-ok">Confirm</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(overlay);
+
+    overlay.querySelector('.confirm-cancel').addEventListener('click', () => overlay.remove());
+    overlay.querySelector('.confirm-ok').addEventListener('click', () => {
+        overlay.remove();
+        onConfirm();
+    });
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) overlay.remove();
+    });
+}
+
+// ── HTML Editor ──
+let originalHtml = '';
+
+async function loadHtmlCode() {
+    const res = await fetch('/api/html');
+    const data = await res.json();
+    document.getElementById('html-code-editor').value = data.content;
+    originalHtml = data.content;
+}
+
+document.getElementById('btn-save-html').addEventListener('click', (e) => {
+    const content = document.getElementById('html-code-editor').value;
+    if (content === originalHtml) {
+        showConfirm('No Changes', 'No changes were detected in the HTML.', () => {});
+        return;
+    }
+
+    showConfirm(
+        'Save HTML Changes?',
+        'This will modify the page structure. If something breaks, you can use <strong>"Reset to Default"</strong> to restore the original template.',
+        async () => {
+            const btn = e.target;
+            const originalText = btn.innerText;
+            btn.innerText = 'Saving...';
+
+            try {
+                const response = await fetch('/api/html', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ content })
+                });
+                if (!response.ok) throw new Error(`Server returned ${response.status}`);
+                location.reload();
+            } catch (error) {
+                showConfirm('Error', 'Failed to save HTML changes.', () => {});
+                btn.innerText = originalText;
+            }
+        }
+    );
+});
+
+document.getElementById('btn-discard-html').addEventListener('click', loadHtmlCode);
+
+document.getElementById('btn-reset-html').addEventListener('click', () => {
+    showConfirm(
+        'Reset HTML?',
+        'This will discard <strong>all your HTML customizations</strong> and restore the original built-in template.',
+        async () => {
+            try {
+                const response = await fetch('/api/html/reset', { method: 'POST' });
+                if (!response.ok) throw new Error(`Server returned ${response.status}`);
+                location.reload();
+            } catch (error) {
+                showConfirm('Error', 'Failed to reset HTML.', () => {});
+            }
+        }
+    );
 });
 
 // ── Category dropdown button ──

@@ -24,6 +24,8 @@ DEFAULT_CATEGORIES = ["Media & Content", "Management & Network", "Ai & Generatio
 DEFAULT_CONFIG = {"theme": "ocean"}
 
 BUILTIN_THEMES = ['default', 'neon', 'ocean']
+USER_HTML_FILE = os.path.join(DATA_DIR, 'custom_base.html')
+BUILTIN_HTML = os.path.join('templates', 'base.html')
 
 # ── Theme configurations (text/labels per theme) ──
 
@@ -200,7 +202,42 @@ def index():
         active_theme = 'default'
 
     tc = get_theme_config(active_theme)
+
+    # Use custom HTML template if it exists
+    if os.path.exists(USER_HTML_FILE):
+        from jinja2 import Template
+        with open(USER_HTML_FILE, 'r') as f:
+            template_str = f.read()
+        template = Template(template_str)
+        return template.render(active_theme=active_theme, **tc)
+
     return render_template('base.html', active_theme=active_theme, **tc)
+
+
+@app.route('/api/html', methods=['GET', 'PUT'])
+def handle_html():
+    if request.method == 'PUT':
+        content = request.json.get('content', '')
+        with open(USER_HTML_FILE, 'w') as f:
+            f.write(content)
+        return jsonify({"status": "success"}), 200
+
+    # GET — return custom HTML if exists, else the built-in template
+    if os.path.exists(USER_HTML_FILE):
+        with open(USER_HTML_FILE, 'r') as f:
+            return jsonify({"content": f.read(), "is_custom": True})
+    else:
+        builtin_path = os.path.join(app.root_path, BUILTIN_HTML)
+        with open(builtin_path, 'r') as f:
+            return jsonify({"content": f.read(), "is_custom": False})
+
+
+@app.route('/api/html/reset', methods=['POST'])
+def reset_html():
+    """Reset HTML back to the built-in template."""
+    if os.path.exists(USER_HTML_FILE):
+        os.remove(USER_HTML_FILE)
+    return jsonify({"status": "success"}), 200
 
 
 @app.route('/api/themes', methods=['GET', 'POST'])

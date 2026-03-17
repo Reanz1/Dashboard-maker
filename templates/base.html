@@ -141,9 +141,26 @@
                 </div>
             </details>
 
-            <!-- Edit Theme Code -->
+            <!-- Edit HTML -->
+            <details class="group" id="details-html-edit">
+                <summary class="toolbar-link toolbar-link--editor">&lt;/&gt; Edit HTML</summary>
+                <div class="editor-panel editor-panel--full animate-drop-fade">
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="panel-heading mb-0">HTML Template Editor</span>
+                        <span class="editor-warning">Changes will modify the page structure!</span>
+                    </div>
+                    <textarea id="html-code-editor" class="code-editor" spellcheck="false"></textarea>
+                    <div class="mt-4 flex gap-4 justify-end">
+                        <button type="button" id="btn-reset-html" class="btn-secondary" style="margin-right:auto; color: var(--color-danger, #ef4444);">Reset to Default</button>
+                        <button type="button" id="btn-discard-html" class="btn-secondary">{{ discard_text }}</button>
+                        <button type="button" id="btn-save-html" class="btn-primary">Save HTML</button>
+                    </div>
+                </div>
+            </details>
+
+            <!-- Edit Theme CSS -->
             <details class="group" id="details-theme-edit">
-                <summary class="toolbar-link toolbar-link--editor">{{ edit_code_label }}</summary>
+                <summary class="toolbar-link toolbar-link--editor">&lt;/&gt; Edit CSS</summary>
                 <div class="editor-panel editor-panel--full animate-drop-fade">
                     <div class="flex justify-between items-center mb-4">
                         <span class="panel-heading mb-0">{{ editor_heading }}</span>
