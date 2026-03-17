@@ -21,7 +21,7 @@ CATEGORIES_FILE = os.path.join(DATA_DIR, 'categories.json')
 CONFIG_FILE = os.path.join(DATA_DIR, 'config.json')
 
 DEFAULT_CATEGORIES = ["Media & Content", "Management & Network", "Ai & Generation"]
-DEFAULT_CONFIG = {"theme": "ocean"}
+DEFAULT_CONFIG = {"theme": "default"}
 
 BUILTIN_THEMES = ['default', 'neon', 'ocean']
 USER_HTML_FILE = os.path.join(DATA_DIR, 'custom_base.html')
