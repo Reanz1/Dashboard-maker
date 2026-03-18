@@ -247,9 +247,10 @@ body { background-color: var(--color-bg); background-image: var(--body-bg-image,
 body.edit-mode { border-top-color: var(--color-edit-border); }
 body:not(.edit-mode) .edit-mode-only { display: none !important; }
 body.edit-mode .edit-mode-only { animation: editFadeIn 0.3s var(--ease, ease-out) both; }
-@keyframes editFadeIn { 0% { opacity: 0; transform: translateY(-10px) scale(0.98); filter: blur(var(--blur-amount, 0px)); } 100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); } }
-@keyframes dropFade { 0% { opacity: 0; transform: translateY(-8px) scale(0.98); filter: blur(var(--blur-amount, 0px)); } 100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); } }
+@keyframes editFadeIn { 0% { opacity: 0; transform: translateY(-10px) scale(0.98); filter: blur(var(--blur-amount, 0px)); } 100% { opacity: 1; transform: none; filter: none; } }
+@keyframes dropFade { 0% { opacity: 0; transform: translateY(-8px) scale(0.98); filter: blur(var(--blur-amount, 0px)); } 100% { opacity: 1; transform: none; filter: none; } }
 .animate-drop-fade { animation: dropFade 0.25s var(--ease, ease-out) both; transform-origin: top; }
+@keyframes fullPanelFade { 0% { opacity: 0; } 100% { opacity: 1; } }
 details > summary { list-style: none; user-select: none; }
 details > summary::-webkit-details-marker { display: none; }
 ::-webkit-scrollbar { width: var(--scrollbar-width, 8px); }
@@ -280,6 +281,8 @@ details > summary::-webkit-details-marker { display: none; }
 @media (min-width: 640px) { .editor-panel--narrow { left: auto; } }
 .editor-panel--wide { max-width: 56rem; }
 .editor-panel--full { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90vw; max-width: 56rem; max-height: 90vh; overflow-y: auto; z-index: 9000; }
+.editor-panel--full.animate-drop-fade { animation-name: fullPanelFade; }
+.edit-toolbar:has(details[open] > .editor-panel--full) { backdrop-filter: none !important; }
 .panel-input { background: var(--input-bg) !important; border: 1px solid var(--input-border) !important; color: var(--input-text) !important; padding: 0.75rem; border-radius: var(--input-radius, 0.25rem); font-size: 0.875rem; width: 100%; outline: none; transition: border-color 0.2s; backdrop-filter: var(--input-backdrop, none); }
 .panel-input:focus { border-color: var(--input-focus-border) !important; box-shadow: var(--input-focus-shadow, none); }
 .panel-input-label { font-size: var(--label-size, 0.5625rem); font-weight: 700; color: var(--label-color, var(--toolbar-link-color)); margin-left: 0.25rem; }
@@ -321,7 +324,7 @@ details > summary::-webkit-details-marker { display: none; }
 
     <div class="ambient-glow"></div>
 
-    <div class="max-w-5xl mx-auto relative" style="z-index: var(--z-content)">
+    <div class="max-w-5xl mx-auto relative">
 
     <!-- ── Header ── -->
     <div class="flex items-center justify-between mb-12">
