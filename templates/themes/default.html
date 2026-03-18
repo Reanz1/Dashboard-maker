@@ -116,6 +116,7 @@ body { background-color: var(--color-bg); background-image: var(--body-bg-image,
 body.edit-mode { border-top-color: var(--color-edit-border); }
 body:not(.edit-mode) .edit-mode-only { display: none !important; }
 body.edit-mode .edit-mode-only { animation: editFadeIn 0.3s var(--ease, ease-out) both; }
+body.edit-mode .edit-toolbar.edit-mode-only, body.edit-mode .edit-mode-only:has(.edit-toolbar) { animation: none; }
 @keyframes editFadeIn { 0% { opacity: 0; transform: translateY(-10px) scale(0.98); filter: blur(var(--blur-amount, 0px)); } 100% { opacity: 1; transform: none; filter: none; } }
 @keyframes dropFade { 0% { opacity: 0; transform: translateY(-8px) scale(0.98); filter: blur(var(--blur-amount, 0px)); } 100% { opacity: 1; transform: none; filter: none; } }
 .animate-drop-fade { animation: dropFade 0.25s var(--ease, ease-out) both; transform-origin: top; }
@@ -149,7 +150,7 @@ details > summary::-webkit-details-marker { display: none; }
 .editor-panel--narrow { max-width: 28rem; left: 0; }
 @media (min-width: 640px) { .editor-panel--narrow { left: auto; } }
 .editor-panel--wide { max-width: 56rem; }
-.editor-panel--full { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90vw; max-width: 56rem; max-height: 90vh; overflow-y: auto; z-index: 9000; }
+.editor-panel--full { position: fixed; inset: 0; margin: auto; width: 90vw; max-width: 56rem; height: fit-content; max-height: 90vh; overflow-y: auto; z-index: 9000; }
 .editor-panel--full.animate-drop-fade { animation-name: fullPanelFade; }
 .edit-toolbar:has(details[open] > .editor-panel--full) { backdrop-filter: none !important; }
 .panel-input { background: var(--input-bg) !important; border: 1px solid var(--input-border) !important; color: var(--input-text) !important; padding: 0.75rem; border-radius: var(--input-radius, 0.25rem); font-size: 0.875rem; width: 100%; outline: none; transition: border-color 0.2s; backdrop-filter: var(--input-backdrop, none); }
