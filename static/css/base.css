@@ -226,8 +226,15 @@ details > summary::-webkit-details-marker { display: none; }
     max-width: 56rem;
 }
 .editor-panel--full {
-    right: 0;
-    z-index: var(--z-editor);
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90vw;
+    max-width: 56rem;
+    max-height: 90vh;
+    overflow-y: auto;
+    z-index: 9000;
 }
 
 /* ── Panel Inputs ── */
