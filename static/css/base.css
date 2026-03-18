@@ -158,7 +158,7 @@ details > summary::-webkit-details-marker { display: none; }
 /* ── Toolbar ── */
 .edit-toolbar {
     position: relative;
-    z-index: var(--z-toolbar);
+    z-index: var(--z-editor);
     display: flex;
     flex-wrap: wrap;
     gap: 1rem;
