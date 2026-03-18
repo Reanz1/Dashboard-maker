@@ -16,13 +16,22 @@ allDetails.forEach(detail => {
             allDetails.forEach(other => {
                 if (other !== detail) other.removeAttribute('open');
             });
+            // Close theme editor overlay when another panel opens
+            if (detail !== detailsThemeEdit) closeThemeEditorOverlay();
+
+            // Theme editor uses a body-level overlay instead of inline panel
+            if (detail === detailsThemeEdit) {
+                detail.removeAttribute('open');
+                loadThemeCode().then(() => openThemeEditorOverlay());
+                return;
+            }
+
             const animatedChild = detail.querySelector('.animate-drop-fade');
             if (animatedChild) {
                 animatedChild.classList.remove('animate-drop-fade');
                 void animatedChild.offsetWidth;
                 animatedChild.classList.add('animate-drop-fade');
             }
-            if (detail === detailsThemeEdit) loadThemeCode();
         }
     });
 });
@@ -40,6 +49,7 @@ document.getElementById('edit-mode-btn').addEventListener('click', () => {
         btn.classList.remove('active');
         if (btnText) btnText.textContent = btn.dataset.idleText || 'Edit';
         allDetails.forEach(d => d.removeAttribute('open'));
+        closeThemeEditorOverlay();
     }
 });
 
@@ -201,6 +211,54 @@ document.getElementById('btn-save-theme-code').addEventListener('click', (e) => 
 });
 
 document.getElementById('btn-discard-theme-code').addEventListener('click', loadThemeCode);
+
+// ── Theme Editor Overlay ──
+// Moves the editor panel to a body-level overlay (like showConfirm)
+// so it escapes all ancestor stacking contexts and containing blocks.
+function openThemeEditorOverlay() {
+    closeThemeEditorOverlay();
+    const panel = detailsThemeEdit.querySelector('.editor-panel--full');
+    if (!panel) return;
+
+    const overlay = document.createElement('div');
+    overlay.id = 'theme-editor-overlay';
+    overlay.className = 'confirm-overlay';
+    overlay.style.zIndex = '9000';
+
+    // Move panel into the overlay; override positioning (overlay handles centering)
+    panel.style.position = 'relative';
+    panel.style.inset = 'auto';
+    panel.style.margin = '0';
+    panel.style.zIndex = 'auto';
+    overlay.appendChild(panel);
+    document.body.appendChild(overlay);
+
+    // Replay fade-in
+    panel.classList.remove('animate-drop-fade');
+    void panel.offsetWidth;
+    panel.classList.add('animate-drop-fade');
+
+    // Close on backdrop click
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) closeThemeEditorOverlay();
+    });
+}
+
+function closeThemeEditorOverlay() {
+    const overlay = document.getElementById('theme-editor-overlay');
+    if (!overlay) return;
+    const panel = overlay.querySelector('.editor-panel--full');
+    if (panel) {
+        panel.style.position = '';
+        panel.style.inset = '';
+        panel.style.margin = '';
+        panel.style.zIndex = '';
+        // Move panel back into the details element
+        const summary = detailsThemeEdit.querySelector('summary');
+        summary.insertAdjacentElement('afterend', panel);
+    }
+    overlay.remove();
+}
 
 document.getElementById('btn-reset-theme').addEventListener('click', () => {
     const currentTheme = document.getElementById('theme-selector').value;
