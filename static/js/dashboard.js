@@ -319,7 +319,7 @@ function renderDashboard(services) {
             card.target = '_blank';
             card.className = 'service-card p-5 block relative group/card';
             card.innerHTML = `
-                <div class="relative" style="z-index:1">
+                <div class="relative">
                     <div class="card-title">${srv.name}</div>
                     <div class="card-desc">${srv.desc || ''}</div>
                 </div>

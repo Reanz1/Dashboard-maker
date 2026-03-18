@@ -468,6 +468,12 @@ details > summary::-webkit-details-marker { display: none; }
     opacity: 1;
 }
 
+/* ── Dynamic Content (below editor panels) ── */
+#dynamic-content {
+    position: relative;
+    z-index: 0;
+}
+
 /* ── Confirmation Modal ── */
 .confirm-overlay {
     position: fixed;
