@@ -3,7 +3,15 @@ import os
 import uuid
 import re
 import shutil
-from flask import Flask, request, jsonify, send_file
+import ssl
+import stat
+import tempfile
+import time
+import urllib.error
+import urllib.request
+from concurrent.futures import ThreadPoolExecutor
+from flask import Flask, request, jsonify, send_from_directory
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__,
             template_folder='templates',
@@ -25,6 +33,19 @@ DEFAULT_CONFIG = {"theme": "default"}
 
 BUILTIN_THEMES = ['default', 'neon', 'ocean']
 BUILTIN_THEMES_DIR = os.path.join('templates', 'themes')
+
+ALLOWED_IMAGE_EXTENSIONS = {'.png', '.jpg', '.jpeg', '.gif', '.svg', '.webp', '.ico'}
+
+# Reachability checks are cheap but not free; serve a cached sweep for a while.
+STATUS_TTL_SECONDS = 30
+STATUS_TIMEOUT_SECONDS = 3
+_status_cache = {'checked_at': 0.0, 'results': {}}
+
+# Home servers run self-signed certs constantly; "is it answering" is the
+# question here, not "is its certificate trustworthy".
+UNVERIFIED_SSL = ssl.create_default_context()
+UNVERIFIED_SSL.check_hostname = False
+UNVERIFIED_SSL.verify_mode = ssl.CERT_NONE
 
 
 # ── Setup ──
@@ -53,8 +74,77 @@ def load_json(path):
 
 
 def save_json(data, path):
-    with open(path, 'w') as f:
-        json.dump(data, f, indent=4)
+    """Write through a temp file in the same directory, then rename.
+
+    os.replace is atomic, so a crash or a second writer can never leave a
+    half-written services.json behind — the old file stands until the new
+    one is complete.
+    """
+    directory = os.path.dirname(path) or '.'
+    fd, tmp_path = tempfile.mkstemp(dir=directory, suffix='.tmp')
+    try:
+        with os.fdopen(fd, 'w') as f:
+            json.dump(data, f, indent=4)
+            f.flush()
+            os.fsync(f.fileno())
+
+        # mkstemp makes the temp file 0600 and owned by this process. Renaming
+        # it over the original would otherwise quietly drop the permissions and
+        # ownership the data directory had, locking out backup scripts and
+        # anyone reading a bind mount as another user.
+        _carry_over_file_identity(path, tmp_path)
+
+        try:
+            os.replace(tmp_path, path)
+        except OSError:
+            # The destination can be a mount point of its own — someone may
+            # bind-mount a single services.json — and replacing that fails.
+            # Writing in place is not atomic, but it is what 1.0.0 did, and
+            # it keeps those setups working.
+            with open(path, 'w') as f:
+                json.dump(data, f, indent=4)
+            os.remove(tmp_path)
+
+        if path == SERVICES_FILE:
+            # The set of services changed, so the cached sweep is stale.
+            _status_cache['checked_at'] = 0.0
+    except BaseException:
+        if os.path.exists(tmp_path):
+            os.remove(tmp_path)
+        raise
+
+
+def _carry_over_file_identity(original, replacement):
+    """Give the replacement the mode, and where possible the owner, of the
+    file it is about to stand in for."""
+    try:
+        existing = os.stat(original)
+    except FileNotFoundError:
+        os.chmod(replacement, 0o644)  # what a plain open(path, 'w') produced
+        return
+
+    os.chmod(replacement, stat.S_IMODE(existing.st_mode))
+    try:
+        os.chown(replacement, existing.st_uid, existing.st_gid)
+    except (PermissionError, OSError):
+        pass  # not running as root; the mode is the part that matters most
+
+
+# Themes reference Tailwind and Inter by URL. Those are rewritten to local
+# copies as the page is served, rather than in the theme files themselves,
+# because user themes in /data/themes are frozen copies that no image update
+# can reach. Rewriting here fixes those too, without editing anyone's file.
+CDN_REWRITES = (
+    (re.compile(r'https://cdn\.tailwindcss\.com[^"\']*'), '/static/vendor/tailwind.js'),
+    (re.compile(r'https://fonts\.googleapis\.com/css2[^"\']*'), '/static/vendor/inter.css'),
+)
+
+
+def localise_assets(html):
+    """Point a theme's external assets back at this server."""
+    for pattern, replacement in CDN_REWRITES:
+        html = pattern.sub(replacement, html)
+    return html
 
 
 def get_theme_html_path(theme_name):
@@ -72,7 +162,37 @@ def get_theme_html_path(theme_name):
 
 @app.route('/images/<path:filename>')
 def serve_image(filename):
-    return send_file(os.path.join(IMAGES_DIR, filename))
+    # send_from_directory refuses paths that climb out of IMAGES_DIR;
+    # joining the raw filename by hand served any file on the system.
+    return send_from_directory(IMAGES_DIR, filename)
+
+
+@app.route('/api/images', methods=['GET', 'POST'])
+def handle_images():
+    if request.method == 'POST':
+        upload = request.files.get('file')
+        if not upload or not upload.filename:
+            return jsonify({"error": "No file provided"}), 400
+
+        name = secure_filename(upload.filename)
+        stem, ext = os.path.splitext(name)
+        if ext.lower() not in ALLOWED_IMAGE_EXTENSIONS or not stem:
+            return jsonify({"error": "Unsupported image type"}), 400
+
+        # Never clobber an icon another service may already point at.
+        target = os.path.join(IMAGES_DIR, name)
+        counter = 1
+        while os.path.exists(target):
+            name = f'{stem}-{counter}{ext}'
+            target = os.path.join(IMAGES_DIR, name)
+            counter += 1
+
+        upload.save(target)
+        return jsonify({"status": "success", "url": f'/images/{name}'}), 201
+
+    images = [f'/images/{f}' for f in sorted(os.listdir(IMAGES_DIR))
+              if os.path.splitext(f)[1].lower() in ALLOWED_IMAGE_EXTENSIONS]
+    return jsonify(images)
 
 
 @app.route('/')
@@ -85,7 +205,7 @@ def index():
         html_path = get_theme_html_path('default')
 
     with open(html_path, 'r') as f:
-        return f.read()
+        return localise_assets(f.read())
 
 
 @app.route('/api/themes', methods=['GET', 'POST'])
@@ -193,12 +313,45 @@ def handle_categories():
     return jsonify(categories)
 
 
-@app.route('/api/categories/<category_name>', methods=['DELETE'])
-def delete_category(category_name):
+@app.route('/api/categories/<category_name>', methods=['PUT', 'DELETE'])
+def modify_category(category_name):
     categories = load_json(CATEGORIES_FILE)
+    services = load_json(SERVICES_FILE)
+
+    if request.method == 'PUT':
+        new_name = (request.json or {}).get('name', '').strip()
+        if not new_name:
+            return jsonify({"error": "Invalid category name"}), 400
+        if category_name not in categories:
+            return jsonify({"error": "Category not found"}), 404
+        if new_name != category_name and new_name in categories:
+            return jsonify({"error": "That category already exists"}), 409
+
+        categories[categories.index(category_name)] = new_name
+        save_json(categories, CATEGORIES_FILE)
+
+        # Services point at their category by name, so they move with it.
+        for service in services:
+            if service.get('category') == category_name:
+                service['category'] = new_name
+        save_json(services, SERVICES_FILE)
+        return jsonify({"status": "success", "name": new_name}), 200
+
+    # DELETE — services may be moved somewhere rather than left orphaned.
+    reassign_to = request.args.get('reassign')
+    if reassign_to and reassign_to not in categories:
+        return jsonify({"error": "Target category not found"}), 400
+
     if category_name in categories:
         categories.remove(category_name)
         save_json(categories, CATEGORIES_FILE)
+
+    if reassign_to:
+        for service in services:
+            if service.get('category') == category_name:
+                service['category'] = reassign_to
+        save_json(services, SERVICES_FILE)
+
     return jsonify({"status": "success"}), 200
 
 
@@ -214,12 +367,81 @@ def handle_services():
     return jsonify(services)
 
 
-@app.route('/api/services/<service_id>', methods=['DELETE'])
-def delete_service(service_id):
+@app.route('/api/services/reorder', methods=['POST'])
+def reorder_services():
+    """Stored order is display order, so reordering rewrites the list."""
+    desired = (request.json or {}).get('order', [])
     services = load_json(SERVICES_FILE)
-    services = [s for s in services if s.get('id') != service_id]
-    save_json(services, SERVICES_FILE)
+    by_id = {s.get('id'): s for s in services}
+
+    ordered = [by_id.pop(sid) for sid in desired if sid in by_id]
+    # Anything the client didn't mention keeps its relative order, at the back.
+    ordered.extend(s for s in services if s.get('id') in by_id)
+
+    save_json(ordered, SERVICES_FILE)
     return jsonify({"status": "success"}), 200
+
+
+def check_service(service):
+    """Report whether a service answers at all. Any reply counts as up —
+    a 401 or a 404 still means something is listening."""
+    url = (service.get('url') or '').strip()
+    if not url:
+        return 'down'
+    if not url.startswith(('http://', 'https://')):
+        url = 'http://' + url
+
+    for method in ('HEAD', 'GET'):  # plenty of servers reject HEAD
+        try:
+            req = urllib.request.Request(
+                url, method=method, headers={'User-Agent': 'dashboard-maker'})
+            urllib.request.urlopen(
+                req, timeout=STATUS_TIMEOUT_SECONDS, context=UNVERIFIED_SSL).close()
+            return 'up'
+        except urllib.error.HTTPError:
+            return 'up'
+        except Exception:
+            continue
+    return 'down'
+
+
+@app.route('/api/status')
+def service_status():
+    now = time.time()
+    if now - _status_cache['checked_at'] < STATUS_TTL_SECONDS:
+        return jsonify(_status_cache['results'])
+
+    services = load_json(SERVICES_FILE)
+    if services:
+        with ThreadPoolExecutor(max_workers=8) as pool:
+            states = list(pool.map(check_service, services))
+    else:
+        states = []
+
+    _status_cache['results'] = {s['id']: state
+                                for s, state in zip(services, states) if s.get('id')}
+    _status_cache['checked_at'] = now
+    return jsonify(_status_cache['results'])
+
+
+@app.route('/api/services/<service_id>', methods=['PUT', 'DELETE'])
+def modify_service(service_id):
+    services = load_json(SERVICES_FILE)
+
+    if request.method == 'DELETE':
+        services = [s for s in services if s.get('id') != service_id]
+        save_json(services, SERVICES_FILE)
+        return jsonify({"status": "success"}), 200
+
+    updates = request.json or {}
+    for service in services:
+        if service.get('id') == service_id:
+            service.update(updates)
+            service['id'] = service_id  # the id is ours to set, never the client's
+            save_json(services, SERVICES_FILE)
+            return jsonify({"status": "success"}), 200
+
+    return jsonify({"error": "Service not found"}), 404
 
 
 if __name__ == '__main__':
