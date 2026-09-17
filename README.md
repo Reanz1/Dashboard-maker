@@ -43,5 +43,4 @@ services:
     volumes:
       - ./data:/data
       - ./images:/images
-      - ./templates:/templates
 ```
