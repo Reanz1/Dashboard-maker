@@ -6,8 +6,5 @@ services:
     ports:
       - "5000:5000"
     volumes:
-      # services.json, categories.json, config.json — and custom themes
-      # in ./data/themes
       - ./data:/data
-      # service icons
       - ./images:/images
