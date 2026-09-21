@@ -10,6 +10,8 @@ https://github.com/user-attachments/assets/ec1ab340-0e73-4aa1-a94a-6adbee43263a
 
 https://github.com/user-attachments/assets/e57e59e4-062c-404d-9746-2b031dbc6048
 
+https://github.com/user-attachments/assets/8a50a0ed-3003-4ca6-acd3-6c2a34d0beb3
+
 ## 🚀 Key Features
 
 **Manage everything from the page.** Flip on edit mode to add, edit, reorder and delete service cards, and to create, rename and delete categories. Nothing needs a restart, and nothing needs the source.
