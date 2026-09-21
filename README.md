@@ -8,7 +8,9 @@ Built for self-hosters who want one page that links to everything they run, with
 
 https://github.com/user-attachments/assets/e57e59e4-062c-404d-9746-2b031dbc6048
 
-https://github.com/user-attachments/assets/6eefac9b-5ce3-4c17-bac0-21988b0dd128
+
+https://github.com/user-attachments/assets/ec1ab340-0e73-4aa1-a94a-6adbee43263a
+
 
 ## 🚀 Key Features
 
