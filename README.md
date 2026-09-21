@@ -6,11 +6,9 @@ Built for self-hosters who want one page that links to everything they run, with
 
 ## 😊 Examples
 
-https://github.com/user-attachments/assets/e57e59e4-062c-404d-9746-2b031dbc6048
-
-
 https://github.com/user-attachments/assets/ec1ab340-0e73-4aa1-a94a-6adbee43263a
 
+https://github.com/user-attachments/assets/e57e59e4-062c-404d-9746-2b031dbc6048
 
 ## 🚀 Key Features
 
