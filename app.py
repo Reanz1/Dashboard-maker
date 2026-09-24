@@ -383,8 +383,9 @@ def reorder_services():
 
 
 def check_service(service):
-    """Report whether a service answers at all. Any reply counts as up —
-    a 401 or a 404 still means something is listening."""
+    """Report whether a service answers. A 4xx still counts as up — a 401 or
+    a 404 means something is listening. A 5xx does not: behind a reverse
+    proxy, a dead backend shows up as the proxy's 502/503/504."""
     url = (service.get('url') or '').strip()
     if not url:
         return 'down'
@@ -398,8 +399,10 @@ def check_service(service):
             urllib.request.urlopen(
                 req, timeout=STATUS_TIMEOUT_SECONDS, context=UNVERIFIED_SSL).close()
             return 'up'
-        except urllib.error.HTTPError:
-            return 'up'
+        except urllib.error.HTTPError as e:
+            if e.code < 500:
+                return 'up'
+            # 5xx: try GET too, in case only HEAD is unimplemented (501).
         except Exception:
             continue
     return 'down'

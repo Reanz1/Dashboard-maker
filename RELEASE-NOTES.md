@@ -7,7 +7,7 @@
 - **Rename categories**, with every service in them following the rename (`PUT /api/categories/<name>`).
 - **Safer category deletion.** Deleting a category that still holds services now asks where they should go instead of silently orphaning them (`DELETE /api/categories/<name>?reassign=<target>`).
 - **Drag to reorder** service cards within a category (`POST /api/services/reorder`).
-- **Reachability indicator** per service, from a new `GET /api/status`. Checks run server-side, in parallel, cached for 30 seconds. Any response counts as up; self-signed certificates are accepted.
+- **Reachability indicator** per service, from a new `GET /api/status`. Checks run server-side, in parallel, cached for 30 seconds. Any response below 500 counts as up (so a reverse proxy answering 502 for a dead backend shows as down); self-signed certificates are accepted.
 - **Search box** filtering on name, description, URL and category.
 
 ## Fixed
